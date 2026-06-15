@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Converstation AI | Advancing Conversational Intelligence</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
   <meta name="description" content="Converstation AI builds the world's leading simulation infrastructure for training, evaluating, and improving conversational intelligence." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
@@ -507,9 +508,9 @@
   <script>
     // ── EmailJS init ──
     // REPLACE these three values after setting up EmailJS:
-    const EMAILJS_PUBLIC_KEY  = 'IEnPFHFYuRpb2c-A-';
+    const EMAILJS_PUBLIC_KEY  = 'TDqc1E9Mjzs3n-Tlj';
     const EMAILJS_SERVICE_ID  = 'service_shdzfdtedftgyhui';
-    const EMAILJS_TEMPLATE_ID = 'service_shdzfdtedftgyhui';
+    const EMAILJS_TEMPLATE_ID = 'template_g4zc6dq';
 
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
@@ -528,6 +529,9 @@
         await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, this);
         msg.textContent = '✓ Message sent! We\'ll be in touch soon.';
         msg.className = 'form-message success';
+        msg.style.display = 'block';
+        msg.scrollIntoView({ behavior: 'smooth' });
+        this.reset();
         this.reset();
       } catch (err) {
         console.error('EmailJS error:', err);
