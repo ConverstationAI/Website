@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Admin | Converstation AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cobalt: #0052CC; --cobalt-dark: #003d99; --cobalt-light: #EBF8FF;
+      --ink: #1A202C; --ink-light: #4A5568; --muted: #718096;
+      --border: #E2E8F0; --bg: #F7FAFC;
+    }
+    body { font-family: 'DM Sans', sans-serif; color: var(--ink); background: var(--bg); min-height: 100vh; }
+
+    /* AUTH SCREEN */
+    .auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .auth-box { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 40px; width: 100%; max-width: 400px; }
+    .auth-logo { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+    .auth-logo span { color: var(--cobalt); }
+    .auth-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .auth-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; font-family: inherit; margin-bottom: 12px; outline: none; }
+    .auth-input:focus { border-color: var(--cobalt); }
+    .auth-btn { width: 100%; background: var(--cobalt); color: white; border: none; border-radius: 8px; padding: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .auth-btn:hover { background: var(--cobalt-dark); }
+    .auth-error { font-size: 13px; color: #C53030; margin-top: 10px; }
+
+    /* ADMIN LAYOUT */
+    .admin-layout { display: none; min-height: 100vh; }
+    .admin-layout.visible { display: flex; }
+    .sidebar { width: 240px; background: var(--ink); padding: 24px 0; flex-shrink: 0; min-height: 100vh; position: fixed; top: 0; left: 0; }
+    .sidebar-logo { padding: 0 20px 24px; font-size: 16px; font-weight: 700; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo span { color: #60A5FA; }
+    .sidebar-nav { padding: 16px 0; }
+    .sidebar-link { display: block; padding: 10px 20px; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.2s; border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
+    .sidebar-link:hover, .sidebar-link.active { color: white; background: rgba(255,255,255,0.08); }
+    .sidebar-signout { position: absolute; bottom: 20px; left: 0; right: 0; padding: 0 20px; }
+    .signout-btn { width: 100%; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); border: none; border-radius: 8px; padding: 10px; font-size: 13px; cursor: pointer; font-family: inherit; }
+    .signout-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+
+    .main-content { margin-left: 240px; flex: 1; padding: 32px; }
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .page-title { font-size: 24px; font-weight: 700; color: var(--ink); }
+    .btn-primary { background: var(--cobalt); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .btn-primary:hover { background: var(--cobalt-dark); }
+    .btn-danger { background: #FED7D7; color: #C53030; border: none; border-radius: 6px; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .btn-ghost { background: white; color: var(--cobalt); border: 1.5px solid var(--cobalt); border-radius: 8px; padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+    /* POSTS LIST */
+    .posts-table { background: white; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .posts-table-row { display: grid; grid-template-columns: 1fr 120px 100px 100px 80px; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .posts-table-row:last-child { border-bottom: none; }
+    .posts-table-header { background: #F7FAFC; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+    .post-row-title { font-weight: 600; color: var(--ink); }
+    .post-row-title small { display: block; font-size: 12px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+    .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .badge-published { background: #C6F6D5; color: #276749; }
+    .badge-draft { background: #FEF3C7; color: #92400E; }
+    .row-actions { display: flex; gap: 8px; }
+    .edit-btn { font-size: 12px; color: var(--cobalt); background: var(--cobalt-light); border: none; border-radius: 6px; padding: 5px 12px; cursor: pointer; font-weight: 600; font-family: inherit; }
+
+    /* EDITOR */
+    .editor-form { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 28px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 7px; display: block; }
+    .form-control { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; font-family: inherit; color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .form-control:focus { border-color: var(--cobalt); }
+    .form-select { appearance: none; cursor: pointer; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .editor-area { width: 100%; min-height: 300px; padding: 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; font-family: inherit; color: var(--ink); outline: none; resize: vertical; }
+    .editor-area:focus { border-color: var(--cobalt); }
+    .editor-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    /* MEDIA UPLOAD */
+    .media-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 32px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .media-zone:hover, .media-zone.drag-over { border-color: var(--cobalt); background: var(--cobalt-light); }
+    .media-zone p { font-size: 14px; color: var(--muted); margin-top: 8px; }
+    .media-zone .icon { font-size: 32px; }
+    .media-preview { margin-top: 12px; }
+    .media-preview img, .media-preview video, .media-preview audio { max-width: 100%; border-radius: 8px; margin-top: 8px; }
+    .upload-progress { margin-top: 8px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; display: none; }
+    .upload-progress-bar { height: 100%; background: var(--cobalt); width: 0%; transition: width 0.3s; }
+
+    .editor-actions { display: flex; gap: 12px; margin-top: 24px; align-items: center; }
+    .save-status { font-size: 13px; color: var(--muted); }
+    .save-status.saved { color: #276749; }
+    .save-status.error { color: #C53030; }
+
+    /* COMMENTS ADMIN */
+    .comment-admin-item { background: white; border: 1.5px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+    .comment-admin-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .comment-admin-meta { font-size: 13px; color: var(--muted); }
+    .comment-admin-meta strong { color: var(--ink); }
+    .comment-admin-text { font-size: 14px; color: var(--ink-light); line-height: 1.6; }
+    .comment-admin-post { font-size: 12px; color: var(--cobalt); margin-bottom: 6px; font-weight: 600; }
+
+    .spinner { width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--cobalt); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-center { text-align: center; padding: 40px; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">Converstation <span>AI</span></div>
+    <p class="auth-sub">Blog Admin — Sign in to continue</p>
+    <input class="auth-input" type="email" id="auth-email" placeholder="Email address" />
+    <input class="auth-input" type="password" id="auth-password" placeholder="Password" />
+    <button class="auth-btn" id="auth-btn">Sign In</button>
+    <p class="auth-error" id="auth-error"></p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="admin-layout" id="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">Converstation <span>AI</span><br><small style="font-size:11px;font-weight:400;opacity:0.5">Blog Admin</small></div>
+    <nav class="sidebar-nav">
+      <button class="sidebar-link active" data-page="posts">📋 All Posts</button>
+      <button class="sidebar-link" data-page="new-post">✏️ New Post</button>
+      <button class="sidebar-link" data-page="comments">💬 Comments</button>
+    </nav>
+    <div class="sidebar-signout">
+      <span id="admin-user" style="font-size:12px;color:rgba(255,255,255,0.4);display:block;margin-bottom:8px;padding:0 4px"></span>
+      <button class="signout-btn" id="signout-btn">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <!-- POSTS LIST -->
+    <div class="page active" id="page-posts">
+      <div class="page-header">
+        <h1 class="page-title">All Posts</h1>
+        <button class="btn-primary" id="go-new-post">+ New Post</button>
+      </div>
+      <div class="posts-table">
+        <div class="posts-table-row posts-table-header">
+          <div>Title</div><div>Tag</div><div>Status</div><div>Comments</div><div>Actions</div>
+        </div>
+        <div id="posts-list"><div class="loading-center"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- NEW / EDIT POST -->
+    <div class="page" id="page-new-post">
+      <div class="page-header">
+        <h1 class="page-title" id="editor-title">New Post</h1>
+        <button class="btn-ghost" id="cancel-edit">Cancel</button>
+      </div>
+      <div class="editor-form">
+        <input type="hidden" id="edit-post-id" />
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Post Title *</label>
+            <input class="form-control" id="post-title" placeholder="Enter title…" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tag / Category</label>
+            <select class="form-control form-select" id="post-tag">
+              <option>CaseyMD</option>
+              <option>V2VLab</option>
+              <option>Research</option>
+              <option>Company</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Short Excerpt (shown on blog index)</label>
+          <input class="form-control" id="post-excerpt" placeholder="One or two sentences summarising this post…" />
+        </div>
+
+        <!-- COVER MEDIA -->
+        <div class="form-group">
+          <label class="form-label">Cover Media (image, video, or audio)</label>
+          <div class="media-zone" id="cover-drop-zone">
+            <div class="icon">📎</div>
+            <p>Drag & drop or click to upload<br><small>Image (JPG/PNG/GIF/WebP), Video (MP4), or Audio (MP3/WAV)</small></p>
+            <input type="file" id="cover-file" accept="image/*,video/mp4,audio/*" style="display:none" />
+          </div>
+          <div class="upload-progress" id="cover-progress"><div class="upload-progress-bar" id="cover-progress-bar"></div></div>
+          <div class="media-preview" id="cover-preview"></div>
+          <input type="hidden" id="cover-url" />
+          <input type="hidden" id="cover-type" />
+        </div>
+
+        <!-- POST BODY -->
+        <div class="form-group">
+          <label class="form-label">Post Content (HTML supported)</label>
+          <textarea class="editor-area" id="post-body" placeholder="Write your post here. You can use HTML tags like &lt;h2&gt;, &lt;p&gt;, &lt;img&gt;, &lt;blockquote&gt;, &lt;ul&gt;…"></textarea>
+          <p class="editor-note">Tip: Paste image/video/audio URLs directly into HTML tags. Use &lt;img src="…"&gt;, &lt;video controls src="…"&gt;, &lt;audio controls src="…"&gt;</p>
+        </div>
+
+        <!-- INLINE MEDIA UPLOAD -->
+        <div class="form-group">
+          <label class="form-label">Upload Inline Media (get URL to paste into content)</label>
+          <div class="media-zone" id="inline-drop-zone">
+            <div class="icon">🖼️</div>
+            <p>Upload image, video, or audio — copy the URL into your post</p>
+            <input type="file" id="inline-file" accept="image/*,video/*,audio/*" style="display:none" />
+          </div>
+          <div class="upload-progress" id="inline-progress"><div class="upload-progress-bar" id="inline-progress-bar"></div></div>
+          <div id="inline-url-box" style="display:none;margin-top:10px">
+            <label class="form-label">Uploaded URL — copy into post content:</label>
+            <input class="form-control" id="inline-url-result" readonly onclick="this.select()" />
+          </div>
+        </div>
+
+        <div class="editor-actions">
+          <button class="btn-primary" id="publish-btn">Publish Post</button>
+          <button class="btn-ghost" id="draft-btn">Save as Draft</button>
+          <span class="save-status" id="save-status"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMENTS -->
+    <div class="page" id="page-comments">
+      <div class="page-header"><h1 class="page-title">All Comments</h1></div>
+      <div id="comments-list"><div class="loading-center"><div class="spinner"></div></div></div>
+    </div>
+
+  </main>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDXkbjQ0JhxyXMyHTkQcpUUwzaEriJGyQk",
+    authDomain: "converstation-ai.firebaseapp.com",
+    projectId: "converstation-ai",
+    storageBucket: "converstation-ai.firebasestorage.app",
+    messagingSenderId: "999197990",
+    appId: "1:999197990:web:a567285970d092ace805e7"
+  };
+
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  // ── AUTH ──
+  document.getElementById("auth-btn").addEventListener("click", async () => {
+    const email = document.getElementById("auth-email").value;
+    const password = document.getElementById("auth-password").value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+      document.getElementById("auth-error").textContent = "Invalid email or password.";
+    }
+  });
+
+  document.getElementById("signout-btn").addEventListener("click", () => signOut(auth));
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      document.getElementById("auth-screen").style.display = "none";
+      document.getElementById("admin-layout").classList.add("visible");
+      document.getElementById("admin-user").textContent = user.email;
+      loadPosts();
+    } else {
+      document.getElementById("auth-screen").style.display = "flex";
+      document.getElementById("admin-layout").classList.remove("visible");
+    }
+  });
+
+  // ── NAVIGATION ──
+  function showPage(name) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".sidebar-link").forEach(l => l.classList.remove("active"));
+    document.getElementById("page-" + name).classList.add("active");
+    document.querySelector(`[data-page="${name}"]`)?.classList.add("active");
+    if (name === "posts") loadPosts();
+    if (name === "comments") loadAllComments();
+  }
+
+  document.querySelectorAll(".sidebar-link").forEach(btn => {
+    btn.addEventListener("click", () => showPage(btn.dataset.page));
+  });
+  document.getElementById("go-new-post").addEventListener("click", () => { resetEditor(); showPage("new-post"); });
+  document.getElementById("cancel-edit").addEventListener("click", () => showPage("posts"));
+
+  // ── POSTS LIST ──
+  async function loadPosts() {
+    const list = document.getElementById("posts-list");
+    list.innerHTML = '<div class="loading-center"><div class="spinner"></div></div>';
+    const snap = await getDocs(query(collection(db, "posts"), orderBy("createdAt", "desc")));
+    if (snap.empty) { list.innerHTML = '<div class="loading-center" style="padding:24px">No posts yet.</div>'; return; }
+    list.innerHTML = "";
+    snap.forEach(docSnap => {
+      const p = docSnap.data();
+      const row = document.createElement("div");
+      row.className = "posts-table-row";
+      const date = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString() : "—";
+      row.innerHTML = `
+        <div class="post-row-title">${p.title}<small>${date}</small></div>
+        <div>${p.tag || "—"}</div>
+        <div><span class="badge ${p.published ? 'badge-published' : 'badge-draft'}">${p.published ? 'Published' : 'Draft'}</span></div>
+        <div>${p.commentCount || 0}</div>
+        <div class="row-actions">
+          <button class="edit-btn" data-id="${docSnap.id}">Edit</button>
+          <button class="btn-danger" data-del="${docSnap.id}">Del</button>
+        </div>`;
+      list.appendChild(row);
+    });
+
+    list.querySelectorAll(".edit-btn").forEach(btn => {
+      btn.addEventListener("click", () => loadPostForEdit(btn.dataset.id));
+    });
+    list.querySelectorAll("[data-del]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm("Delete this post?")) return;
+        await deleteDoc(doc(db, "posts", btn.dataset.del));
+        loadPosts();
+      });
+    });
+  }
+
+  async function loadPostForEdit(id) {
+    resetEditor();
+    document.getElementById("edit-post-id").value = id;
+    document.getElementById("editor-title").textContent = "Edit Post";
+    const snap = await getDoc(doc(db, "posts", id));
+    const p = snap.data();
+    document.getElementById("post-title").value = p.title || "";
+    document.getElementById("post-tag").value = p.tag || "CaseyMD";
+    document.getElementById("post-excerpt").value = p.excerpt || "";
+    document.getElementById("post-body").value = p.content || "";
+    document.getElementById("cover-url").value = p.coverImage || p.coverVideo || p.coverAudio || "";
+    document.getElementById("cover-type").value = p.coverImage ? "image" : p.coverVideo ? "video" : p.coverAudio ? "audio" : "";
+    if (p.coverImage) document.getElementById("cover-preview").innerHTML = `<img src="${p.coverImage}" style="max-height:160px;border-radius:8px" />`;
+    showPage("new-post");
+  }
+
+  function resetEditor() {
+    document.getElementById("edit-post-id").value = "";
+    document.getElementById("editor-title").textContent = "New Post";
+    document.getElementById("post-title").value = "";
+    document.getElementById("post-excerpt").value = "";
+    document.getElementById("post-body").value = "";
+    document.getElementById("cover-url").value = "";
+    document.getElementById("cover-type").value = "";
+    document.getElementById("cover-preview").innerHTML = "";
+    document.getElementById("save-status").textContent = "";
+  }
+
+  // ── FILE UPLOAD ──
+  function uploadFile(file, progressId, barId, onDone) {
+    const storageRef = ref(storage, `blog/${Date.now()}_${file.name}`);
+    const task = uploadBytesResumable(storageRef, file);
+    document.getElementById(progressId).style.display = "block";
+    task.on("state_changed",
+      snap => { document.getElementById(barId).style.width = (snap.bytesTransferred / snap.totalBytes * 100) + "%"; },
+      err => { console.error(err); alert("Upload failed."); },
+      async () => { const url = await getDownloadURL(task.snapshot.ref); onDone(url, file.type); }
+    );
+  }
+
+  // Cover media
+  const coverZone = document.getElementById("cover-drop-zone");
+  coverZone.addEventListener("click", () => document.getElementById("cover-file").click());
+  coverZone.addEventListener("dragover", e => { e.preventDefault(); coverZone.classList.add("drag-over"); });
+  coverZone.addEventListener("dragleave", () => coverZone.classList.remove("drag-over"));
+  coverZone.addEventListener("drop", e => { e.preventDefault(); coverZone.classList.remove("drag-over"); handleCoverFile(e.dataTransfer.files[0]); });
+  document.getElementById("cover-file").addEventListener("change", e => handleCoverFile(e.target.files[0]));
+
+  function handleCoverFile(file) {
+    if (!file) return;
+    uploadFile(file, "cover-progress", "cover-progress-bar", (url, type) => {
+      document.getElementById("cover-url").value = url;
+      const t = type.startsWith("image") ? "image" : type.startsWith("video") ? "video" : "audio";
+      document.getElementById("cover-type").value = t;
+      const preview = document.getElementById("cover-preview");
+      if (t === "image") preview.innerHTML = `<img src="${url}" style="max-height:180px;border-radius:8px;margin-top:10px" />`;
+      else if (t === "video") preview.innerHTML = `<video controls src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px"></video>`;
+      else preview.innerHTML = `<audio controls src="${url}" style="width:100%;margin-top:10px"></audio>`;
+    });
+  }
+
+  // Inline media
+  const inlineZone = document.getElementById("inline-drop-zone");
+  inlineZone.addEventListener("click", () => document.getElementById("inline-file").click());
+  inlineZone.addEventListener("dragover", e => { e.preventDefault(); inlineZone.classList.add("drag-over"); });
+  inlineZone.addEventListener("dragleave", () => inlineZone.classList.remove("drag-over"));
+  inlineZone.addEventListener("drop", e => { e.preventDefault(); inlineZone.classList.remove("drag-over"); handleInlineFile(e.dataTransfer.files[0]); });
+  document.getElementById("inline-file").addEventListener("change", e => handleInlineFile(e.target.files[0]));
+
+  function handleInlineFile(file) {
+    if (!file) return;
+    uploadFile(file, "inline-progress", "inline-progress-bar", (url) => {
+      document.getElementById("inline-url-box").style.display = "block";
+      document.getElementById("inline-url-result").value = url;
+    });
+  }
+
+  // ── SAVE POST ──
+  async function savePost(published) {
+    const id = document.getElementById("edit-post-id").value;
+    const title = document.getElementById("post-title").value.trim();
+    if (!title) { alert("Title is required."); return; }
+    const coverUrl = document.getElementById("cover-url").value;
+    const coverType = document.getElementById("cover-type").value;
+    const status = document.getElementById("save-status");
+    status.textContent = "Saving…"; status.className = "save-status";
+
+    const data = {
+      title,
+      tag: document.getElementById("post-tag").value,
+      excerpt: document.getElementById("post-excerpt").value.trim(),
+      content: document.getElementById("post-body").value,
+      published,
+      authorName: auth.currentUser?.displayName || auth.currentUser?.email?.split("@")[0] || "Converstation AI",
+      updatedAt: serverTimestamp(),
+      coverImage: coverType === "image" ? coverUrl : null,
+      coverVideo: coverType === "video" ? coverUrl : null,
+      coverAudio: coverType === "audio" ? coverUrl : null,
+    };
+
+    try {
+      if (id) {
+        await updateDoc(doc(db, "posts", id), data);
+      } else {
+        data.createdAt = serverTimestamp();
+        data.commentCount = 0;
+        await addDoc(collection(db, "posts"), data);
+      }
+      status.textContent = published ? "✓ Published!" : "✓ Saved as draft"; status.className = "save-status saved";
+      setTimeout(() => showPage("posts"), 1200);
+    } catch (e) {
+      console.error(e); status.textContent = "Error saving post."; status.className = "save-status error";
+    }
+  }
+
+  document.getElementById("publish-btn").addEventListener("click", () => savePost(true));
+  document.getElementById("draft-btn").addEventListener("click", () => savePost(false));
+
+  // ── COMMENTS ──
+  async function loadAllComments() {
+    const list = document.getElementById("comments-list");
+    list.innerHTML = '<div class="loading-center"><div class="spinner"></div></div>';
+    const postsSnap = await getDocs(collection(db, "posts"));
+    const allComments = [];
+    for (const postDoc of postsSnap.docs) {
+      const commSnap = await getDocs(query(collection(db, "posts", postDoc.id, "comments"), orderBy("createdAt", "desc")));
+      commSnap.forEach(c => allComments.push({ ...c.data(), id: c.id, postId: postDoc.id, postTitle: postDoc.data().title }));
+    }
+    if (!allComments.length) { list.innerHTML = '<div class="loading-center">No comments yet.</div>'; return; }
+    list.innerHTML = allComments.map(c => `
+      <div class="comment-admin-item" id="c-${c.postId}-${c.id}">
+        <div class="comment-admin-post">On: ${c.postTitle}</div>
+        <div class="comment-admin-header">
+          <div class="comment-admin-meta"><strong>${c.name}</strong> — ${c.email}</div>
+          <button class="btn-danger" onclick="deleteComment('${c.postId}','${c.id}')">Delete</button>
+        </div>
+        <div class="comment-admin-text">${c.text}</div>
+      </div>`).join("");
+  }
+
+  window.deleteComment = async (postId, commentId) => {
+    if (!confirm("Delete this comment?")) return;
+    await deleteDoc(doc(db, "posts", postId, "comments", commentId));
+    document.getElementById(`c-${postId}-${commentId}`)?.remove();
+  };
+</script>
+</body>
+</html>
+
+
