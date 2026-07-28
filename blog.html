@@ -163,9 +163,46 @@
     .fade-d1 { transition-delay: 0.05s; }
     .fade-d2 { transition-delay: 0.1s; }
 
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .posts-grid { grid-template-columns: 1fr; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-toggle { display: flex; }
+      .nav-logo-tag { display: none; }
+      .nav-links {
+        display: none;
+        position: fixed; top: var(--nav-h); left: 0; right: 0;
+        flex-direction: column; align-items: stretch; gap: 0;
+        background: white; padding: 6px 5% 22px;
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 14px 34px rgba(0,0,0,0.10);
+        max-height: calc(100vh - var(--nav-h)); overflow-y: auto;
+      }
+      .nav-links.open { display: flex; }
+      .nav-link { padding: 15px 0; border-bottom: 1px solid var(--border); font-size: 17px; }
+      .nav-cta { margin-top: 18px; text-align: center; padding: 14px 20px; font-size: 17px; }
+
+      .hero { padding: calc(var(--nav-h) + 56px) 6% 48px; }
+      .hero-title { font-size: clamp(32px, 9vw, 48px); }
+      .hero-mission { font-size: 17px; }
+
+      .filter-section { padding: 36px 6% 0; }
+      .filter-bar { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+      .filter-bar::-webkit-scrollbar { display: none; }
+      .filter-btn { flex-shrink: 0; }
+
+      .posts-section { padding: 32px 6% 64px; }
+      .posts-grid { grid-template-columns: 1fr; gap: 20px; }
+      .post-thumb, .skeleton-thumb { height: 180px; }
+      .post-body, .skeleton-body { padding: 24px 22px; }
+      .post-headline { font-size: 23px; }
+
+      footer { padding: 40px 6%; }
+      .footer-top { flex-direction: column; gap: 24px; }
+      .footer-links { gap: 14px 22px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+
+    @media (hover: none) {
+      .post-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
     }
   </style>
 

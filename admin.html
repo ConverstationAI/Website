@@ -103,6 +103,50 @@
     .spinner { width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--cobalt); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-center { text-align: center; padding: 40px; color: var(--muted); }
+
+    /* ── MOBILE ── */
+    .admin-menu-btn { display: none; position: fixed; top: 12px; left: 12px; z-index: 60;
+      background: var(--ink); color: white; border: none; border-radius: 8px;
+      width: 44px; height: 44px; font-size: 20px; cursor: pointer; line-height: 1; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 40; }
+    .sidebar-overlay.open { display: block; }
+
+    @media (max-width: 820px) {
+      .admin-menu-btn { display: block; }
+      .sidebar { transform: translateX(-100%); transition: transform 0.25s ease; z-index: 50; width: 260px; }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; padding: 68px 18px 32px; width: 100%; }
+
+      .page-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .page-header .btn-primary, .page-header .btn-ghost { width: 100%; }
+
+      .posts-table-header { display: none; }
+      .posts-table-row { grid-template-columns: 1fr; gap: 10px; padding: 18px; }
+      .row-actions { justify-content: flex-start; }
+      .edit-btn { padding: 9px 20px; font-size: 14px; }
+      .btn-danger { padding: 9px 20px; font-size: 14px; }
+
+      .form-grid { grid-template-columns: 1fr; gap: 0; }
+      .editor-form { padding: 20px 18px; }
+      .editor-actions { flex-direction: column; align-items: stretch; }
+      .editor-actions .btn-primary, .editor-actions .btn-ghost { width: 100%; }
+      .editor-area { min-height: 240px; }
+      .media-zone { padding: 24px 16px; }
+
+      /* 16px prevents iOS auto-zoom on focus */
+      .form-control, .editor-area, .auth-input { font-size: 16px; }
+
+      .comment-admin-header { flex-direction: column; gap: 10px; }
+      .comment-admin-header .btn-danger { align-self: flex-start; }
+
+      .auth-screen { padding: 20px; }
+      .auth-box { padding: 28px 22px; }
+    }
+
+    @media (max-width: 420px) {
+      .main-content { padding: 64px 14px 28px; }
+      .page-title { font-size: 21px; }
+    }
   </style>
 </head>
 <body>
@@ -121,7 +165,10 @@
 
 <!-- ADMIN -->
 <div class="admin-layout" id="admin-layout">
-  <aside class="sidebar">
+  <button class="admin-menu-btn" id="admin-menu-btn" aria-label="Menu">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">Converstation <span>AI</span><br><small style="font-size:11px;font-weight:400;opacity:0.5">Blog Admin</small></div>
     <nav class="sidebar-nav">
       <button class="sidebar-link active" data-page="posts">📋 All Posts</button>
@@ -233,12 +280,12 @@
 
 <script type="module">
   import { app, db } from "./firebase-init.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-const auth = getAuth(app);
-const storage = getStorage(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
 
   // ── AUTH ──
   document.getElementById("auth-btn").addEventListener("click", async () => {
@@ -265,12 +312,28 @@ const storage = getStorage(app);
     }
   });
 
+  // ── MOBILE SIDEBAR ──
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("sidebar-overlay");
+  const menuBtn = document.getElementById("admin-menu-btn");
+  function closeSidebar() {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("open");
+  }
+  menuBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("open");
+  });
+  overlay.addEventListener("click", closeSidebar);
+
   // ── NAVIGATION ──
   function showPage(name) {
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     document.querySelectorAll(".sidebar-link").forEach(l => l.classList.remove("active"));
     document.getElementById("page-" + name).classList.add("active");
     document.querySelector(`[data-page="${name}"]`)?.classList.add("active");
+    closeSidebar();
+    window.scrollTo({ top: 0 });
     if (name === "posts") loadPosts();
     if (name === "comments") loadAllComments();
   }
@@ -297,7 +360,7 @@ const storage = getStorage(app);
         <div class="post-row-title">${p.title}<small>${date}</small></div>
         <div>${p.tag || "—"}</div>
         <div><span class="badge ${p.published ? 'badge-published' : 'badge-draft'}">${p.published ? 'Published' : 'Draft'}</span></div>
-        <div>${p.commentCount || 0}</div>
+        <div>💬 ${p.commentCount || 0}</div>
         <div class="row-actions">
           <button class="edit-btn" data-id="${docSnap.id}">Edit</button>
           <button class="btn-danger" data-del="${docSnap.id}">Del</button>
@@ -465,5 +528,3 @@ const storage = getStorage(app);
 </script>
 </body>
 </html>
-
-

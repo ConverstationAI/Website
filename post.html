@@ -201,9 +201,54 @@
     .badge-casey { background: var(--cobalt); color: white; }
     .badge-v2v { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
 
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-toggle { display: flex; }
+      .nav-logo-tag { display: none; }
+      .nav-links {
+        display: none;
+        position: fixed; top: var(--nav-h); left: 0; right: 0;
+        flex-direction: column; align-items: stretch; gap: 0;
+        background: white; padding: 6px 5% 22px;
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 14px 34px rgba(0,0,0,0.10);
+        max-height: calc(100vh - var(--nav-h)); overflow-y: auto;
+      }
+      .nav-links.open { display: flex; }
+      .nav-link { padding: 15px 0; border-bottom: 1px solid var(--border); font-size: 17px; }
+      .nav-cta { margin-top: 18px; text-align: center; padding: 14px 20px; font-size: 17px; }
+
+      .post-header { padding: calc(var(--nav-h) + 48px) 6% 40px; }
+      .post-title { font-size: clamp(28px, 8vw, 40px); }
+      .post-meta { gap: 12px; }
+      .post-avatar { width: 42px; height: 42px; }
+
+      .article-section { padding: 0 6% 56px; }
+      .cover-media { border-radius: 14px; margin-bottom: 32px; }
+      .post-content { font-size: 17px; line-height: 1.8; }
+      .post-content h2 { font-size: 26px; margin: 36px 0 14px; }
+      .post-content blockquote { padding: 22px 20px; font-size: 18px; margin: 28px 0; }
+      .post-content img, .post-content video { border-radius: 12px; margin: 24px 0; }
+
+      .share-bar { margin-top: 40px; padding: 22px 0; gap: 10px; }
+      .share-label { width: 100%; margin-bottom: 4px; }
+      .share-btn { flex: 1; text-align: center; min-width: 120px; }
+
+      .comments-section { padding: 56px 6%; }
+      .comment-form { padding: 24px 22px; border-radius: 16px; }
       .form-row { grid-template-columns: 1fr; }
+      .btn-primary { width: 100%; }
+
+      .comment { gap: 12px; }
+      .comment-avatar { width: 40px; height: 40px; }
+      .comment-bubble { padding: 18px 20px; }
+      .replies { padding-left: 14px; }
+      .reply-form { padding: 16px; }
+
+      footer { padding: 40px 6%; }
+      .footer-top { flex-direction: column; gap: 24px; }
+      .footer-links { gap: 14px 22px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
     }
   </style>
 
