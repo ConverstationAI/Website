@@ -251,6 +251,7 @@
       <a href="#audiences" class="nav-link">Who It's For</a>
       <a href="#technology" class="nav-link">Technology</a>
       <a href="#about" class="nav-link">About</a>
+      <a href="blog.html" class="nav-link">Blog</a>
       <a href="#contact" class="nav-cta">Get in Touch</a>
     </div>
   </nav>
@@ -490,6 +491,7 @@
           <a href="#audiences" class="footer-link">Who It's For</a>
           <a href="#technology" class="footer-link">Technology</a>
           <a href="#about" class="footer-link">About</a>
+          <a href="blog.html" class="footer-link">Blog</a>
           <a href="#contact" class="footer-link">Contact</a>
           <a href="mailto:admin@converstation.ai" class="footer-link">admin@converstation.ai</a>
         </div>
@@ -506,25 +508,20 @@
   </footer>
 
   <script>
-    // ── EmailJS init ──
-    // REPLACE these three values after setting up EmailJS:
     const EMAILJS_PUBLIC_KEY  = 'TDqc1E9Mjzs3n-Tlj';
     const EMAILJS_SERVICE_ID  = 'service_shdzfdtedftgyhui';
     const EMAILJS_TEMPLATE_ID = 'template_g4zc6dq';
 
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
-    // ── Contact form ──
     document.getElementById('contact-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       const btn = document.getElementById('form-submit');
       const msg = document.getElementById('form-message');
-
       btn.disabled = true;
       btn.textContent = 'Sending…';
       msg.className = 'form-message';
       msg.style.display = 'none';
-
       try {
         await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, this);
         msg.textContent = '✓ Message sent! We\'ll be in touch soon.';
@@ -532,31 +529,28 @@
         msg.style.display = 'block';
         msg.scrollIntoView({ behavior: 'smooth' });
         this.reset();
-        this.reset();
       } catch (err) {
         console.error('EmailJS error:', err);
         msg.textContent = 'Something went wrong. Please email us directly at admin@converstation.ai';
         msg.className = 'form-message error';
+        msg.style.display = 'block';
       } finally {
         btn.disabled = false;
         btn.textContent = 'Send Message →';
       }
     });
 
-    // ── Nav scroll shadow ──
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 20);
     });
 
-    // ── Fade in on scroll ──
     const fades = document.querySelectorAll('.fade');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     fades.forEach(el => observer.observe(el));
 
-    // ── Smooth scroll ──
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();

@@ -4,193 +4,321 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blog | Converstation AI</title>
-  <meta name="description" content="Updates, insights, and news from Converstation AI." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'> </text></svg>">
+  <meta name="description" content="Updates, product news, and research from Converstation AI." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --cobalt: #0052CC; --cobalt-dark: #003d99; --cobalt-light: #EBF8FF;
-      --ink: #1A202C; --ink-light: #4A5568; --muted: #718096;
-      --border: #E2E8F0; --bg: #ffffff; --bg-soft: #F7FAFC; --nav-h: 72px;
+      --cobalt: #0052CC;
+      --cobalt-dark: #003d99;
+      --cobalt-light: #EBF8FF;
+      --cobalt-mid: #BEE3F8;
+      --ink: #1A202C;
+      --ink-mid: #2D3748;
+      --ink-light: #4A5568;
+      --muted: #718096;
+      --border: #E2E8F0;
+      --bg: #ffffff;
+      --bg-soft: #F7FAFC;
+      --nav-h: 72px;
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; color: var(--ink); background: var(--bg); overflow-x: hidden; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; color: var(--ink); background: var(--bg); overflow-x: hidden; }
+    ::selection { background: var(--cobalt); color: white; }
 
-    /* NAV */
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h); background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; }
-    .nav-logo { font-size: 18px; font-weight: 700; color: var(--ink); text-decoration: none; }
-    .nav-logo span { color: var(--cobalt); }
-    .nav-links { display: flex; gap: 28px; align-items: center; }
-    .nav-link { font-size: 15px; font-weight: 500; color: var(--ink-light); text-decoration: none; transition: color 0.2s; }
+    /* ── NAV (identical to landing page) ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-h); background: white;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .nav-logo { display: flex; flex-direction: column; gap: 1px; text-decoration: none; }
+    .nav-logo-name { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; }
+    .nav-logo-name span { color: var(--cobalt); }
+    .nav-logo-tag { font-size: 16px; font-weight: 500; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-link { font-size: 16px; font-weight: 500; color: var(--ink-light); cursor: pointer; background: none; border: none; font-family: inherit; transition: color 0.2s; text-decoration: none; }
     .nav-link:hover { color: var(--cobalt); }
-    .nav-cta { background: var(--cobalt); color: white; border-radius: 8px; padding: 9px 20px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-    .nav-cta:hover { background: var(--cobalt-dark); }
+    .nav-link.current { color: var(--cobalt); font-weight: 600; }
+    .nav-cta { background: var(--cobalt); color: white; border: none; border-radius: 8px; padding: 9px 20px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; text-decoration: none; }
+    .nav-cta:hover { background: var(--cobalt-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,82,204,0.25); }
 
-    /* HERO */
-    .blog-hero { padding: calc(var(--nav-h) + 60px) 5% 48px; background: linear-gradient(180deg, #F0F6FF 0%, #fff 100%); }
-    .blog-hero-inner { max-width: 860px; margin: 0 auto; }
-    .blog-eyebrow { font-size: 12px; font-weight: 700; color: var(--cobalt); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
-    .blog-title { font-family: 'DM Serif Display', serif; font-size: clamp(32px, 5vw, 52px); color: var(--ink); margin-bottom: 14px; line-height: 1.1; }
-    .blog-sub { font-size: 17px; color: var(--muted); }
+    /* ── HERO (mirrors landing page hero) ── */
+    .hero {
+      padding-top: calc(var(--nav-h) + 80px);
+      padding-bottom: 64px;
+      padding-left: 5%; padding-right: 5%;
+      background: linear-gradient(180deg, #F0F6FF 0%, #ffffff 100%);
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-block; background: var(--cobalt-light); color: var(--cobalt);
+      font-size: 16px; font-weight: 700; padding: 6px 16px; border-radius: 100px;
+      margin-bottom: 28px; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(42px, 6vw, 64px);
+      font-weight: 400; line-height: 1.1;
+      color: var(--ink); max-width: 760px; margin: 0 auto 24px;
+    }
+    .hero-title em { font-style: italic; color: var(--cobalt); }
+    .hero-mission {
+      font-size: 18px; color: var(--ink-light); line-height: 1.7;
+      max-width: 560px; margin: 0 auto; font-weight: 400;
+    }
 
-    /* FILTER TABS */
-    .filter-bar { max-width: 860px; margin: 0 auto 40px; padding: 0 5%; display: flex; gap: 10px; flex-wrap: wrap; padding-top: 32px; }
-    .filter-btn { font-size: 14px; font-weight: 600; padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: white; color: var(--muted); cursor: pointer; transition: all 0.2s; font-family: inherit; }
-    .filter-btn.active, .filter-btn:hover { background: var(--cobalt); color: white; border-color: var(--cobalt); }
+    /* ── FILTER BAR ── */
+    .filter-section { background: var(--bg); padding: 48px 5% 0; }
+    .filter-bar { max-width: 1000px; margin: 0 auto; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .filter-btn {
+      font-size: 16px; font-weight: 600; padding: 8px 20px; border-radius: 100px;
+      border: 1.5px solid var(--border); background: white; color: var(--muted);
+      cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .filter-btn:hover { border-color: var(--cobalt); color: var(--cobalt); }
+    .filter-btn.active { background: var(--cobalt); color: white; border-color: var(--cobalt); }
 
-    /* POST GRID */
-    .posts-section { max-width: 860px; margin: 0 auto; padding: 0 5% 80px; }
-    .posts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-    .post-card { border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; background: white; transition: all 0.25s; text-decoration: none; display: flex; flex-direction: column; }
-    .post-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,82,204,0.1); border-color: #BEE3F8; }
-    .post-thumb { width: 100%; height: 200px; object-fit: cover; background: var(--cobalt-light); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    /* ── POSTS ── */
+    .posts-section { background: var(--bg); padding: 48px 5% 96px; }
+    .posts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; max-width: 1000px; margin: 0 auto; }
+    .post-card {
+      background: white; border: 1.5px solid var(--border); border-radius: 20px;
+      overflow: hidden; text-decoration: none; display: flex; flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+    .post-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,82,204,0.12); border-color: var(--cobalt-mid); }
+    .post-thumb { width: 100%; height: 210px; background: var(--cobalt-light); display: flex; align-items: center; justify-content: center; font-size: 44px; position: relative; overflow: hidden; }
     .post-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .post-thumb.video-thumb { position: relative; }
-    .post-thumb.video-thumb::after { content: '▶'; position: absolute; font-size: 36px; color: white; background: rgba(0,0,0,0.45); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
-    .post-body { padding: 24px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
-    .post-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--cobalt); background: var(--cobalt-light); padding: 3px 10px; border-radius: 20px; }
-    .post-headline { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--ink); line-height: 1.3; flex: 1; }
-    .post-excerpt { font-size: 14px; color: var(--muted); line-height: 1.65; }
-    .post-meta { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
-    .post-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--cobalt); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-    .post-author-info { font-size: 13px; color: var(--muted); }
-    .post-author-info strong { color: var(--ink); font-weight: 600; }
-    .post-comment-count { margin-left: auto; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .post-thumb.media-video::after {
+      content: '▶'; position: absolute; font-size: 24px; color: white;
+      background: rgba(0,0,0,0.5); border-radius: 50%; width: 64px; height: 64px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .post-body { padding: 32px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+    .post-tag {
+      display: inline-block; width: fit-content; font-size: 16px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--cobalt);
+      background: var(--cobalt-light); padding: 4px 12px; border-radius: 20px;
+    }
+    .post-headline { font-family: 'DM Serif Display', serif; font-size: 26px; font-weight: 400; color: var(--ink); line-height: 1.2; }
+    .post-excerpt { font-size: 16px; color: var(--ink-light); line-height: 1.7; flex: 1; }
+    .post-meta { display: flex; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .post-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--cobalt); color: white; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .post-author-info { font-size: 16px; color: var(--muted); line-height: 1.4; }
+    .post-author-info strong { color: var(--ink); font-weight: 600; display: block; }
+    .post-comment-count { margin-left: auto; font-size: 16px; color: var(--muted); }
 
-    /* EMPTY STATE */
-    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
-    .empty-state p { font-size: 16px; margin-top: 10px; }
-
-    /* LOADING */
-    .loading { text-align: center; padding: 60px; color: var(--muted); font-size: 16px; }
-    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--cobalt); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    /* ── STATES ── */
+    .state-box { grid-column: 1 / -1; text-align: center; padding: 80px 20px; }
+    .state-icon { font-size: 44px; margin-bottom: 16px; }
+    .state-text { font-size: 18px; color: var(--muted); }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--cobalt); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 18px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* FOOTER */
-    footer { background: var(--ink); padding: 32px 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-logo { font-size: 15px; font-weight: 700; color: white; text-decoration: none; }
-    .footer-logo span { color: #60A5FA; }
-    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.35); }
+    /* ── FOOTER (identical to landing page) ── */
+    footer { background: var(--ink); padding: 48px 5%; }
+    .footer-inner { max-width: 900px; margin: 0 auto; }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 32px; margin-bottom: 32px; }
+    .footer-brand-name { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .footer-brand-name span { color: #60A5FA; }
+    .footer-brand-tag { font-size: 16px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+    .footer-link { font-size: 16px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-link:hover { color: white; }
+    .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin-bottom: 20px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-copy { font-size: 16px; color: rgba(255,255,255,0.3); }
+    .footer-products { display: flex; gap: 16px; }
+    .footer-product-badge { font-size: 16px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-decoration: none; transition: opacity 0.2s; }
+    .footer-product-badge:hover { opacity: 0.8; }
+    .badge-casey { background: var(--cobalt); color: white; }
+    .badge-v2v { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
 
-    @media (max-width: 640px) {
-      .posts-grid { grid-template-columns: 1fr; }
+    /* ── FADE IN ── */
+    .fade { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade.visible { opacity: 1; transform: translateY(0); }
+    .fade-d1 { transition-delay: 0.1s; }
+    .fade-d2 { transition-delay: 0.2s; }
+    .fade-d3 { transition-delay: 0.3s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
       .nav-links { display: none; }
+      .posts-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">Converstation <span>AI</span></a>
-  <div class="nav-links">
-    <a href="/#products" class="nav-link">Products</a>
-    <a href="/#about" class="nav-link">About</a>
-    <a href="/blog.html" class="nav-link" style="color:var(--cobalt)">Blog</a>
-    <a href="/#contact" class="nav-cta">Get in Touch</a>
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-name">Converstation <span>AI</span></span>
+      <span class="nav-logo-tag">Advancing Conversational Intelligence Through Simulation</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#products" class="nav-link">Products</a>
+      <a href="index.html#audiences" class="nav-link">Who It's For</a>
+      <a href="index.html#technology" class="nav-link">Technology</a>
+      <a href="index.html#about" class="nav-link">About</a>
+      <a href="blog.html" class="nav-link current">Blog</a>
+      <a href="index.html#contact" class="nav-cta">Get in Touch</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="fade"><span class="hero-eyebrow">The Blog</span></div>
+    <div class="fade fade-d1">
+      <h1 class="hero-title">Updates from<br /><em>Converstation AI</em></h1>
+    </div>
+    <div class="fade fade-d2">
+      <p class="hero-mission">Product releases, research findings, and company news from the team building the simulation layer for conversational intelligence.</p>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <div class="filter-section">
+    <div class="filter-bar fade">
+      <button class="filter-btn active" data-tag="all">All Posts</button>
+      <button class="filter-btn" data-tag="CaseyMD">CaseyMD</button>
+      <button class="filter-btn" data-tag="V2VLab">V2VLab</button>
+      <button class="filter-btn" data-tag="Research">Research</button>
+      <button class="filter-btn" data-tag="Company">Company</button>
+    </div>
   </div>
-</nav>
 
-<div class="blog-hero">
-  <div class="blog-hero-inner">
-    <p class="blog-eyebrow">Converstation AI</p>
-    <h1 class="blog-title">Updates & Insights</h1>
-    <p class="blog-sub">News, product updates, and research from the Converstation AI team.</p>
-  </div>
-</div>
+  <!-- POSTS -->
+  <section class="posts-section">
+    <div id="posts-grid" class="posts-grid">
+      <div class="state-box"><div class="spinner"></div><p class="state-text">Loading posts…</p></div>
+    </div>
+  </section>
 
-<div class="filter-bar">
-  <button class="filter-btn active" data-tag="all">All</button>
-  <button class="filter-btn" data-tag="CaseyMD">CaseyMD</button>
-  <button class="filter-btn" data-tag="V2VLab">V2VLab</button>
-  <button class="filter-btn" data-tag="Research">Research</button>
-  <button class="filter-btn" data-tag="Company">Company</button>
-</div>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand-name">Converstation <span>AI</span></div>
+          <div class="footer-brand-tag">Advancing Conversational Intelligence Through Simulation</div>
+        </div>
+        <div class="footer-links">
+          <a href="index.html#products" class="footer-link">Products</a>
+          <a href="index.html#audiences" class="footer-link">Who It's For</a>
+          <a href="index.html#technology" class="footer-link">Technology</a>
+          <a href="index.html#about" class="footer-link">About</a>
+          <a href="blog.html" class="footer-link">Blog</a>
+          <a href="index.html#contact" class="footer-link">Contact</a>
+          <a href="mailto:admin@converstation.ai" class="footer-link">admin@converstation.ai</a>
+        </div>
+      </div>
+      <hr class="footer-divider" />
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 Converstation AI LLC. All rights reserved.</span>
+        <div class="footer-products">
+          <a href="https://caseymd.com" target="_blank" class="footer-product-badge badge-casey">CaseyMD</a>
+          <a href="https://v2vlab.com" target="_blank" class="footer-product-badge badge-v2v">V2VLab</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
-<section class="posts-section">
-  <div id="posts-grid" class="posts-grid">
-    <div class="loading"><div class="spinner"></div>Loading posts…</div>
-  </div>
-</section>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<footer>
-  <a href="/" class="footer-logo">Converstation <span>AI</span> LLC</a>
-  <span class="footer-copy">© 2026 Converstation AI LLC. All rights reserved.</span>
-</footer>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, query, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSy...",
-    authDomain: "converstation-ai.firebaseapp.com",
-    projectId: "converstation-ai",
-    storageBucket: "converstation-ai.appspot.com",
-    messagingSenderId: "264470224727",
-    appId: "1:264470224727:web:abc123"
-  };
+    async function loadPosts(tag = "all") {
+      const grid = document.getElementById("posts-grid");
+      grid.innerHTML = '<div class="state-box"><div class="spinner"></div><p class="state-text">Loading posts…</p></div>';
+      try {
+        const q = query(collection(db, "posts"), where("published", "==", true), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
+        const posts = [];
+        snap.forEach(d => {
+          const data = d.data();
+          if (tag === "all" || data.tag === tag) posts.push({ id: d.id, ...data });
+        });
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+        if (!posts.length) {
+          grid.innerHTML = '<div class="state-box"><div class="state-icon">✍️</div><p class="state-text">No posts here yet. Check back soon.</p></div>';
+          return;
+        }
 
-  let currentTag = "all";
-
-  async function loadPosts(tag = "all") {
-    const grid = document.getElementById("posts-grid");
-    grid.innerHTML = '<div class="loading"><div class="spinner"></div>Loading posts…</div>';
-    try {
-      let q = query(collection(db, "posts"), where("published", "==", true), orderBy("createdAt", "desc"));
-      const snap = await getDocs(q);
-      const posts = [];
-      snap.forEach(doc => {
-        const d = doc.data();
-        if (tag === "all" || d.tag === tag) posts.push({ id: doc.id, ...d });
-      });
-
-      if (posts.length === 0) {
-        grid.innerHTML = '<div class="empty-state"><div style="font-size:48px">✍️</div><p>No posts yet. Check back soon!</p></div>';
-        return;
-      }
-
-      grid.innerHTML = posts.map(p => {
-        const date = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "";
-        const initials = (p.authorName || "CA").split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
-        let thumbHtml = `<div class="post-thumb" style="background:var(--cobalt-light)">💬</div>`;
-        if (p.coverImage) thumbHtml = `<div class="post-thumb"><img src="${p.coverImage}" alt="" /></div>`;
-        else if (p.coverVideo) thumbHtml = `<div class="post-thumb video-thumb"><img src="${p.coverVideoThumb || ''}" alt="" /></div>`;
-        return `
-          <a class="post-card" href="post.html?id=${p.id}">
-            ${thumbHtml}
-            <div class="post-body">
-              <span class="post-tag">${p.tag || "Update"}</span>
-              <div class="post-headline">${p.title}</div>
-              <div class="post-excerpt">${(p.excerpt || "").slice(0, 120)}${p.excerpt?.length > 120 ? "…" : ""}</div>
-              <div class="post-meta">
-                <div class="post-avatar">${initials}</div>
-                <div class="post-author-info"><strong>${p.authorName || "Converstation AI"}</strong><br>${date}</div>
-                <span class="post-comment-count">💬 ${p.commentCount || 0}</span>
+        grid.innerHTML = posts.map((p, i) => {
+          const date = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "";
+          const initials = (p.authorName || "CA").split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
+          let thumb = '<div class="post-thumb">💬</div>';
+          if (p.coverImage) thumb = `<div class="post-thumb"><img src="${p.coverImage}" alt="" /></div>`;
+          else if (p.coverVideo) thumb = '<div class="post-thumb media-video"></div>';
+          else if (p.coverAudio) thumb = '<div class="post-thumb">🎧</div>';
+          const delay = i % 2 === 0 ? "fade-d1" : "fade-d2";
+          const excerpt = p.excerpt || "";
+          return `
+            <a class="post-card fade ${delay}" href="post.html?id=${p.id}">
+              ${thumb}
+              <div class="post-body">
+                <span class="post-tag">${p.tag || "Update"}</span>
+                <h2 class="post-headline">${p.title}</h2>
+                <p class="post-excerpt">${excerpt.slice(0,140)}${excerpt.length > 140 ? "…" : ""}</p>
+                <div class="post-meta">
+                  <div class="post-avatar">${initials}</div>
+                  <div class="post-author-info"><strong>${p.authorName || "Converstation AI"}</strong>${date}</div>
+                  <span class="post-comment-count">💬 ${p.commentCount || 0}</span>
+                </div>
               </div>
-            </div>
-          </a>`;
-      }).join("");
-    } catch (err) {
-      console.error(err);
-      grid.innerHTML = '<div class="empty-state"><p>Could not load posts. Please try again.</p></div>';
+            </a>`;
+        }).join("");
+
+        observeFades();
+      } catch (err) {
+        console.error(err);
+        grid.innerHTML = '<div class="state-box"><div class="state-icon">⚠️</div><p class="state-text">Could not load posts. Please refresh to try again.</p></div>';
+      }
     }
-  }
 
-  document.querySelectorAll(".filter-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentTag = btn.dataset.tag;
-      loadPosts(currentTag);
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadPosts(btn.dataset.tag);
+      });
     });
-  });
 
-  loadPosts();
-</script>
+    // ── Nav scroll shadow ──
+    const nav = document.getElementById("nav");
+    window.addEventListener("scroll", () => {
+      nav.classList.toggle("scrolled", window.scrollY > 20);
+    });
+
+    // ── Fade in on scroll ──
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
+    }, { threshold: 0.1 });
+    function observeFades() {
+      document.querySelectorAll(".fade:not(.visible)").forEach(el => observer.observe(el));
+    }
+    observeFades();
+
+    loadPosts();
+  </script>
 </body>
 </html>

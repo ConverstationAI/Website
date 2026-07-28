@@ -3,291 +3,458 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post | Converstation AI Blog</title>
+  <title>Post | Converstation AI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'> </text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --cobalt: #0052CC; --cobalt-dark: #003d99; --cobalt-light: #EBF8FF;
-      --ink: #1A202C; --ink-light: #4A5568; --muted: #718096;
-      --border: #E2E8F0; --bg: #ffffff; --nav-h: 72px;
+      --cobalt: #0052CC;
+      --cobalt-dark: #003d99;
+      --cobalt-light: #EBF8FF;
+      --cobalt-mid: #BEE3F8;
+      --ink: #1A202C;
+      --ink-mid: #2D3748;
+      --ink-light: #4A5568;
+      --muted: #718096;
+      --border: #E2E8F0;
+      --bg: #ffffff;
+      --bg-soft: #F7FAFC;
+      --nav-h: 72px;
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; color: var(--ink); background: var(--bg); }
+    body { font-family: 'DM Sans', system-ui, sans-serif; color: var(--ink); background: var(--bg); overflow-x: hidden; }
+    ::selection { background: var(--cobalt); color: white; }
 
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h); background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; }
-    .nav-logo { font-size: 18px; font-weight: 700; color: var(--ink); text-decoration: none; }
-    .nav-logo span { color: var(--cobalt); }
-    .nav-back { font-size: 14px; color: var(--cobalt); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-    .nav-back:hover { text-decoration: underline; }
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-h); background: white;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .nav-logo { display: flex; flex-direction: column; gap: 1px; text-decoration: none; }
+    .nav-logo-name { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; }
+    .nav-logo-name span { color: var(--cobalt); }
+    .nav-logo-tag { font-size: 16px; font-weight: 500; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-link { font-size: 16px; font-weight: 500; color: var(--ink-light); text-decoration: none; transition: color 0.2s; font-family: inherit; }
+    .nav-link:hover { color: var(--cobalt); }
+    .nav-link.current { color: var(--cobalt); font-weight: 600; }
+    .nav-cta { background: var(--cobalt); color: white; border: none; border-radius: 8px; padding: 9px 20px; font-size: 16px; font-weight: 600; font-family: inherit; transition: all 0.2s; text-decoration: none; }
+    .nav-cta:hover { background: var(--cobalt-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,82,204,0.25); }
 
-    .post-wrap { max-width: 740px; margin: 0 auto; padding: calc(var(--nav-h) + 48px) 5% 80px; }
-
-    /* POST HEADER */
-    .post-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--cobalt); background: var(--cobalt-light); padding: 4px 12px; border-radius: 20px; margin-bottom: 18px; }
-    .post-title { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 5vw, 44px); color: var(--ink); line-height: 1.15; margin-bottom: 20px; }
-    .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-    .post-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--cobalt); color: white; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .post-meta-text { font-size: 14px; color: var(--muted); }
+    /* ── POST HEADER (gradient like landing hero) ── */
+    .post-header {
+      padding-top: calc(var(--nav-h) + 72px);
+      padding-bottom: 56px;
+      padding-left: 5%; padding-right: 5%;
+      background: linear-gradient(180deg, #F0F6FF 0%, #ffffff 100%);
+    }
+    .post-header-inner { max-width: 760px; margin: 0 auto; text-align: center; }
+    .back-link { display: inline-block; font-size: 16px; font-weight: 600; color: var(--cobalt); text-decoration: none; margin-bottom: 28px; transition: opacity 0.2s; }
+    .back-link:hover { opacity: 0.7; }
+    .post-tag {
+      display: inline-block; background: var(--cobalt-light); color: var(--cobalt);
+      font-size: 16px; font-weight: 700; padding: 6px 16px; border-radius: 100px;
+      margin-bottom: 24px; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .post-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(34px, 5vw, 56px);
+      font-weight: 400; line-height: 1.12; color: var(--ink); margin-bottom: 28px;
+    }
+    .post-meta { display: flex; align-items: center; justify-content: center; gap: 14px; }
+    .post-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--cobalt); color: white; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .post-meta-text { font-size: 16px; color: var(--muted); text-align: left; line-height: 1.5; }
     .post-meta-text strong { color: var(--ink); font-weight: 600; display: block; }
 
-    /* COVER MEDIA */
-    .cover-media { width: 100%; border-radius: 12px; margin-bottom: 36px; overflow: hidden; }
-    .cover-media img { width: 100%; height: auto; display: block; }
-    .cover-media video, .cover-media audio { width: 100%; display: block; }
+    /* ── ARTICLE ── */
+    .article-section { background: var(--bg); padding: 0 5% 80px; }
+    .article-inner { max-width: 760px; margin: 0 auto; }
+    .cover-media { width: 100%; border-radius: 20px; overflow: hidden; margin-bottom: 48px; border: 1.5px solid var(--border); }
+    .cover-media img, .cover-media video { width: 100%; height: auto; display: block; }
+    .cover-media audio { width: 100%; display: block; padding: 20px; background: var(--bg-soft); }
 
-    /* POST CONTENT */
-    .post-content { font-size: 17px; color: var(--ink-light); line-height: 1.8; }
-    .post-content h2 { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--ink); margin: 36px 0 14px; }
-    .post-content h3 { font-size: 18px; font-weight: 700; color: var(--ink); margin: 28px 0 10px; }
-    .post-content p { margin-bottom: 20px; }
-    .post-content img { max-width: 100%; border-radius: 10px; margin: 20px 0; }
-    .post-content video { max-width: 100%; border-radius: 10px; margin: 20px 0; }
-    .post-content audio { width: 100%; margin: 16px 0; }
-    .post-content blockquote { border-left: 4px solid var(--cobalt); padding: 16px 20px; background: var(--cobalt-light); border-radius: 0 8px 8px 0; margin: 24px 0; font-style: italic; color: var(--ink); }
-    .post-content ul, .post-content ol { padding-left: 28px; margin-bottom: 20px; }
-    .post-content li { margin-bottom: 8px; }
-    .post-content a { color: var(--cobalt); }
+    .post-content { font-size: 18px; color: var(--ink-light); line-height: 1.85; }
+    .post-content h2 { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: var(--ink); margin: 48px 0 18px; line-height: 1.2; }
+    .post-content h3 { font-size: 20px; font-weight: 700; color: var(--ink); margin: 36px 0 12px; }
+    .post-content p { margin-bottom: 24px; }
+    .post-content img { max-width: 100%; border-radius: 16px; margin: 32px 0; border: 1.5px solid var(--border); }
+    .post-content video { max-width: 100%; border-radius: 16px; margin: 32px 0; }
+    .post-content audio { width: 100%; margin: 24px 0; }
+    .post-content blockquote {
+      border-left: 4px solid var(--cobalt); background: white; border-radius: 0 16px 16px 0;
+      padding: 28px 32px; margin: 36px 0;
+      font-family: 'DM Serif Display', serif; font-size: 20px; font-style: italic;
+      color: var(--ink); line-height: 1.5;
+      box-shadow: 0 4px 24px rgba(0,82,204,0.06);
+    }
+    .post-content ul, .post-content ol { padding-left: 28px; margin-bottom: 24px; }
+    .post-content li { margin-bottom: 10px; }
+    .post-content a { color: var(--cobalt); text-decoration: underline; }
+    .post-content a:hover { color: var(--cobalt-dark); }
 
-    /* SHARE */
-    .share-bar { display: flex; align-items: center; gap: 12px; padding: 24px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 48px 0 0; }
-    .share-label { font-size: 14px; font-weight: 600; color: var(--muted); }
-    .share-btn { font-size: 13px; font-weight: 600; padding: 7px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: white; color: var(--ink-light); cursor: pointer; transition: all 0.2s; font-family: inherit; text-decoration: none; display: inline-block; }
-    .share-btn:hover { border-color: var(--cobalt); color: var(--cobalt); }
+    /* ── SHARE ── */
+    .share-bar {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 28px 0; margin-top: 56px;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .share-label { font-size: 16px; font-weight: 700; color: var(--ink); }
+    .share-btn {
+      background: white; color: var(--cobalt); border: 2px solid var(--cobalt);
+      border-radius: 8px; padding: 9px 20px; font-size: 16px; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: all 0.2s; text-decoration: none; display: inline-block;
+    }
+    .share-btn:hover { background: var(--cobalt-light); transform: translateY(-1px); }
 
-    /* COMMENTS */
-    .comments-section { margin-top: 48px; }
-    .comments-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--ink); margin-bottom: 28px; }
-    .comment-form { background: #F7FAFC; border: 1.5px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 36px; }
-    .comment-form h3 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    .form-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; font-family: inherit; color: var(--ink); background: white; outline: none; transition: border-color 0.2s; }
-    .form-input:focus { border-color: var(--cobalt); }
-    .form-textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; font-family: inherit; color: var(--ink); background: white; outline: none; resize: vertical; min-height: 100px; transition: border-color 0.2s; margin-bottom: 12px; }
-    .form-textarea:focus { border-color: var(--cobalt); }
-    .submit-btn { background: var(--cobalt); color: white; border: none; border-radius: 8px; padding: 11px 24px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-    .submit-btn:hover { background: var(--cobalt-dark); }
-    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .form-message { font-size: 14px; margin-top: 10px; padding: 10px 14px; border-radius: 8px; display: none; }
+    /* ── COMMENTS ── */
+    .comments-section { background: var(--bg-soft); padding: 80px 5%; }
+    .comments-inner { max-width: 760px; margin: 0 auto; }
+    .section-eyebrow { font-size: 16px; font-weight: 700; color: var(--cobalt); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+    .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 4vw, 40px); font-weight: 400; color: var(--ink); margin-bottom: 40px; line-height: 1.15; }
+
+    .comment-form { background: white; border: 1.5px solid var(--border); border-radius: 20px; padding: 36px; margin-bottom: 48px; }
+    .comment-form h3 { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 24px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-input, .form-textarea {
+      width: 100%; padding: 12px 16px; background: white;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      color: var(--ink); font-size: 16px; font-family: inherit; outline: none; transition: border-color 0.2s;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+    .form-input:focus, .form-textarea:focus { border-color: var(--cobalt); }
+    .form-textarea { resize: vertical; min-height: 120px; margin-bottom: 16px; }
+    .btn-primary {
+      background: var(--cobalt); color: white; border: none; border-radius: 8px;
+      padding: 14px 32px; font-size: 16px; font-weight: 600; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+    }
+    .btn-primary:hover { background: var(--cobalt-dark); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,82,204,0.3); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .form-message { font-size: 16px; font-weight: 600; padding: 12px 16px; border-radius: 8px; margin-top: 16px; display: none; }
     .form-message.success { background: #C6F6D5; color: #276749; display: block; }
     .form-message.error { background: #FED7D7; color: #C53030; display: block; }
 
-    .comment-list { display: flex; flex-direction: column; gap: 20px; }
-    .comment { display: flex; gap: 14px; }
-    .comment-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--cobalt-light); color: var(--cobalt); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .comment-bubble { flex: 1; background: #F7FAFC; border: 1px solid var(--border); border-radius: 0 12px 12px 12px; padding: 14px 18px; }
-    .comment-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
-    .comment-name { font-size: 14px; font-weight: 700; color: var(--ink); }
-    .comment-date { font-size: 12px; color: var(--muted); }
-    .comment-text { font-size: 15px; color: var(--ink-light); line-height: 1.65; }
-    .comment-reply-btn { font-size: 12px; color: var(--cobalt); background: none; border: none; cursor: pointer; margin-top: 8px; font-family: inherit; font-weight: 600; }
-    .reply-form { margin-top: 12px; display: none; }
+    .comment-list { display: flex; flex-direction: column; gap: 24px; }
+    .comment { display: flex; gap: 16px; }
+    .comment-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--cobalt-light); color: var(--cobalt); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .comment-body { flex: 1; }
+    .comment-bubble { background: white; border: 1.5px solid var(--border); border-radius: 4px 20px 20px 20px; padding: 20px 24px; }
+    .comment-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+    .comment-name { font-size: 16px; font-weight: 700; color: var(--ink); }
+    .comment-date { font-size: 16px; color: var(--muted); }
+    .comment-text { font-size: 16px; color: var(--ink-light); line-height: 1.7; }
+    .reply-toggle { background: none; border: none; font-size: 16px; font-weight: 600; color: var(--cobalt); cursor: pointer; font-family: inherit; margin-top: 10px; padding: 0; }
+    .reply-toggle:hover { text-decoration: underline; }
+    .reply-form { display: none; margin-top: 16px; padding: 20px; background: var(--bg-soft); border-radius: 12px; }
     .reply-form.open { display: block; }
-    .no-comments { font-size: 15px; color: var(--muted); text-align: center; padding: 32px 0; }
+    .reply-form .form-input { margin-bottom: 10px; }
+    .reply-form .form-textarea { min-height: 80px; }
+    .replies { margin-top: 16px; display: flex; flex-direction: column; gap: 14px; padding-left: 24px; border-left: 2px solid var(--border); }
+    .reply-item { display: flex; gap: 12px; }
+    .reply-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--cobalt); color: white; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .reply-bubble { flex: 1; background: white; border: 1.5px solid var(--border); border-radius: 4px 16px 16px 16px; padding: 14px 18px; }
 
-    .loading { text-align: center; padding: 40px; color: var(--muted); }
-    .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--cobalt); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+    .state-box { text-align: center; padding: 60px 20px; }
+    .state-text { font-size: 16px; color: var(--muted); }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--cobalt); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    footer { background: var(--ink); padding: 28px 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-logo { font-size: 15px; font-weight: 700; color: white; text-decoration: none; }
-    .footer-logo span { color: #60A5FA; }
-    .footer-copy { font-size: 13px; color: rgba(255,255,255,0.35); }
+    /* ── FOOTER ── */
+    footer { background: var(--ink); padding: 48px 5%; }
+    .footer-inner { max-width: 900px; margin: 0 auto; }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 32px; margin-bottom: 32px; }
+    .footer-brand-name { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .footer-brand-name span { color: #60A5FA; }
+    .footer-brand-tag { font-size: 16px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+    .footer-link { font-size: 16px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-link:hover { color: white; }
+    .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin-bottom: 20px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-copy { font-size: 16px; color: rgba(255,255,255,0.3); }
+    .footer-products { display: flex; gap: 16px; }
+    .footer-product-badge { font-size: 16px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-decoration: none; transition: opacity 0.2s; }
+    .footer-product-badge:hover { opacity: 0.8; }
+    .badge-casey { background: var(--cobalt); color: white; }
+    .badge-v2v { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
       .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-logo">Converstation <span>AI</span></a>
-  <a href="/blog.html" class="nav-back">← Back to Blog</a>
-</nav>
-
-<div class="post-wrap">
-  <div id="post-content">
-    <div class="loading"><div class="spinner"></div>Loading post…</div>
-  </div>
-
-  <div id="comments-section" class="comments-section" style="display:none">
-    <h2 class="comments-title">Discussion</h2>
-    <div class="comment-form">
-      <h3>Leave a comment</h3>
-      <div class="form-row">
-        <input id="c-name" class="form-input" type="text" placeholder="Your name" required />
-        <input id="c-email" class="form-input" type="email" placeholder="Your email (not published)" required />
-      </div>
-      <textarea id="c-text" class="form-textarea" placeholder="Share your thoughts…"></textarea>
-      <button class="submit-btn" id="submit-comment">Post Comment</button>
-      <div class="form-message" id="comment-msg"></div>
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-name">Converstation <span>AI</span></span>
+      <span class="nav-logo-tag">Advancing Conversational Intelligence Through Simulation</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#products" class="nav-link">Products</a>
+      <a href="index.html#audiences" class="nav-link">Who It's For</a>
+      <a href="index.html#technology" class="nav-link">Technology</a>
+      <a href="index.html#about" class="nav-link">About</a>
+      <a href="blog.html" class="nav-link current">Blog</a>
+      <a href="index.html#contact" class="nav-cta">Get in Touch</a>
     </div>
-    <div id="comment-list" class="comment-list">
-      <div class="loading"><div class="spinner"></div>Loading comments…</div>
+  </nav>
+
+  <!-- POST HEADER -->
+  <section class="post-header">
+    <div class="post-header-inner" id="post-header">
+      <div class="state-box"><div class="spinner"></div><p class="state-text">Loading post…</p></div>
     </div>
-  </div>
-</div>
+  </section>
 
-<footer>
-  <a href="/" class="footer-logo">Converstation <span>AI</span> LLC</a>
-  <span class="footer-copy">© 2026 Converstation AI LLC. All rights reserved.</span>
-</footer>
+  <!-- ARTICLE -->
+  <section class="article-section">
+    <div class="article-inner" id="article-inner"></div>
+  </section>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, getDoc, collection, addDoc, query, orderBy, getDocs, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <!-- COMMENTS -->
+  <section class="comments-section" id="comments-section" style="display:none">
+    <div class="comments-inner">
+      <p class="section-eyebrow">Join the conversation</p>
+      <h2 class="section-title">Discussion</h2>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSy...",
-    authDomain: "converstation-ai.firebaseapp.com",
-    projectId: "converstation-ai",
-    storageBucket: "converstation-ai.appspot.com",
-    messagingSenderId: "264470224727",
-    appId: "1:264470224727:web:abc123"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const postId = new URLSearchParams(window.location.search).get("id");
-
-  async function loadPost() {
-    if (!postId) { document.getElementById("post-content").innerHTML = "<p>Post not found.</p>"; return; }
-    const snap = await getDoc(doc(db, "posts", postId));
-    if (!snap.exists()) { document.getElementById("post-content").innerHTML = "<p>Post not found.</p>"; return; }
-    const p = snap.data();
-    document.title = `${p.title} | Converstation AI Blog`;
-
-    const date = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "";
-    const initials = (p.authorName || "CA").split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
-
-    let coverHtml = "";
-    if (p.coverImage) coverHtml = `<div class="cover-media"><img src="${p.coverImage}" alt="Cover" /></div>`;
-    else if (p.coverVideo) coverHtml = `<div class="cover-media"><video controls src="${p.coverVideo}"></video></div>`;
-    else if (p.coverAudio) coverHtml = `<div class="cover-media"><audio controls src="${p.coverAudio}"></audio></div>`;
-
-    document.getElementById("post-content").innerHTML = `
-      <span class="post-tag">${p.tag || "Update"}</span>
-      <h1 class="post-title">${p.title}</h1>
-      <div class="post-meta">
-        <div class="post-avatar">${initials}</div>
-        <div class="post-meta-text"><strong>${p.authorName || "Converstation AI"}</strong>${date}</div>
+      <div class="comment-form">
+        <h3>Leave a comment</h3>
+        <div class="form-row">
+          <input id="c-name" class="form-input" type="text" placeholder="Your name" required />
+          <input id="c-email" class="form-input" type="email" placeholder="Your email (not published)" required />
+        </div>
+        <textarea id="c-text" class="form-textarea" placeholder="Share your thoughts…"></textarea>
+        <button class="btn-primary" id="submit-comment">Post Comment →</button>
+        <div class="form-message" id="comment-msg"></div>
       </div>
-      ${coverHtml}
-      <div class="post-content">${p.content || ""}</div>
-      <div class="share-bar">
-        <span class="share-label">Share:</span>
-        <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(p.title)}" target="_blank">𝕏 Twitter</a>
-        <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(location.href)}" target="_blank">LinkedIn</a>
-        <button class="share-btn" onclick="navigator.clipboard.writeText(location.href);this.textContent='Copied!'">Copy Link</button>
-      </div>`;
 
-    document.getElementById("comments-section").style.display = "block";
-    loadComments();
-  }
+      <div id="comment-list" class="comment-list">
+        <div class="state-box"><div class="spinner"></div><p class="state-text">Loading comments…</p></div>
+      </div>
+    </div>
+  </section>
 
-  async function loadComments() {
-    const list = document.getElementById("comment-list");
-    try {
-      const q = query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc"));
-      const snap = await getDocs(q);
-      if (snap.empty) { list.innerHTML = '<p class="no-comments">No comments yet. Be the first!</p>'; return; }
-      list.innerHTML = "";
-      snap.forEach(docSnap => {
-        const c = docSnap.data();
-        const date = c.createdAt?.toDate ? c.createdAt.toDate().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "";
-        const initials = (c.name || "?").split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
-        const div = document.createElement("div");
-        div.className = "comment";
-        div.innerHTML = `
-          <div class="comment-avatar">${initials}</div>
-          <div class="comment-bubble">
-            <div class="comment-header">
-              <span class="comment-name">${c.name}</span>
-              <span class="comment-date">${date}</span>
-            </div>
-            <div class="comment-text">${c.text}</div>
-            <button class="comment-reply-btn" data-id="${docSnap.id}">↩ Reply</button>
-            <div class="reply-form" id="reply-${docSnap.id}">
-              <input class="form-input" placeholder="Your name" id="rn-${docSnap.id}" style="margin-bottom:8px" />
-              <input class="form-input" type="email" placeholder="Your email" id="re-${docSnap.id}" style="margin-bottom:8px" />
-              <textarea class="form-textarea" placeholder="Your reply…" id="rt-${docSnap.id}" style="min-height:70px;margin-bottom:8px"></textarea>
-              <button class="submit-btn" style="font-size:13px;padding:8px 16px" data-reply-to="${docSnap.id}">Post Reply</button>
-            </div>
-            ${(c.replies || []).map(r => {
-              const ri = (r.name || "?").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
-              const rd = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "";
-              return `<div class="comment" style="margin-top:14px">
-                <div class="comment-avatar" style="width:30px;height:30px;font-size:11px">${ri}</div>
-                <div class="comment-bubble" style="background:white">
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand-name">Converstation <span>AI</span></div>
+          <div class="footer-brand-tag">Advancing Conversational Intelligence Through Simulation</div>
+        </div>
+        <div class="footer-links">
+          <a href="index.html#products" class="footer-link">Products</a>
+          <a href="index.html#audiences" class="footer-link">Who It's For</a>
+          <a href="index.html#technology" class="footer-link">Technology</a>
+          <a href="index.html#about" class="footer-link">About</a>
+          <a href="blog.html" class="footer-link">Blog</a>
+          <a href="index.html#contact" class="footer-link">Contact</a>
+          <a href="mailto:admin@converstation.ai" class="footer-link">admin@converstation.ai</a>
+        </div>
+      </div>
+      <hr class="footer-divider" />
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 Converstation AI LLC. All rights reserved.</span>
+        <div class="footer-products">
+          <a href="https://caseymd.com" target="_blank" class="footer-product-badge badge-casey">CaseyMD</a>
+          <a href="https://v2vlab.com" target="_blank" class="footer-product-badge badge-v2v">V2VLab</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, query, orderBy, getDocs, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const postId = new URLSearchParams(window.location.search).get("id");
+
+    function initials(name) {
+      return (name || "CA").split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
+    }
+
+    async function loadPost() {
+      const header = document.getElementById("post-header");
+      if (!postId) { header.innerHTML = '<p class="state-text">Post not found.</p>'; return; }
+
+      const snap = await getDoc(doc(db, "posts", postId));
+      if (!snap.exists()) { header.innerHTML = '<p class="state-text">Post not found.</p>'; return; }
+
+      const p = snap.data();
+      document.title = p.title + " | Converstation AI";
+
+      const date = p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "";
+
+      header.innerHTML = `
+        <a href="blog.html" class="back-link">← Back to Blog</a>
+        <div><span class="post-tag">${p.tag || "Update"}</span></div>
+        <h1 class="post-title">${p.title}</h1>
+        <div class="post-meta">
+          <div class="post-avatar">${initials(p.authorName)}</div>
+          <div class="post-meta-text"><strong>${p.authorName || "Converstation AI"}</strong>${date}</div>
+        </div>`;
+
+      let cover = "";
+      if (p.coverImage) cover = `<div class="cover-media"><img src="${p.coverImage}" alt="" /></div>`;
+      else if (p.coverVideo) cover = `<div class="cover-media"><video controls src="${p.coverVideo}"></video></div>`;
+      else if (p.coverAudio) cover = `<div class="cover-media"><audio controls src="${p.coverAudio}"></audio></div>`;
+
+      document.getElementById("article-inner").innerHTML = `
+        ${cover}
+        <div class="post-content">${p.content || ""}</div>
+        <div class="share-bar">
+          <span class="share-label">Share this post:</span>
+          <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(p.title)}" target="_blank">X / Twitter</a>
+          <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(location.href)}" target="_blank">LinkedIn</a>
+          <button class="share-btn" id="copy-link">Copy Link</button>
+        </div>`;
+
+      document.getElementById("copy-link").addEventListener("click", function() {
+        navigator.clipboard.writeText(location.href);
+        this.textContent = "Copied ✓";
+        setTimeout(() => { this.textContent = "Copy Link"; }, 2000);
+      });
+
+      document.getElementById("comments-section").style.display = "block";
+      loadComments();
+    }
+
+    async function loadComments() {
+      const list = document.getElementById("comment-list");
+      try {
+        const snap = await getDocs(query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc")));
+        if (snap.empty) {
+          list.innerHTML = '<div class="state-box"><p class="state-text">No comments yet. Be the first to share your thoughts.</p></div>';
+          return;
+        }
+        list.innerHTML = "";
+        snap.forEach(docSnap => {
+          const c = docSnap.data();
+          const date = c.createdAt?.toDate ? c.createdAt.toDate().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "";
+          const repliesHtml = (c.replies || []).map(r => {
+            const rd = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+                     : (r.createdAt ? new Date(r.createdAt.seconds ? r.createdAt.seconds * 1000 : r.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "");
+            return `<div class="reply-item">
+                <div class="reply-avatar">${initials(r.name)}</div>
+                <div class="reply-bubble">
                   <div class="comment-header"><span class="comment-name">${r.name}</span><span class="comment-date">${rd}</span></div>
                   <div class="comment-text">${r.text}</div>
-                </div></div>`;
-            }).join("")}
-          </div>`;
-        list.appendChild(div);
-      });
+                </div>
+              </div>`;
+          }).join("");
 
-      // Reply toggles
-      document.querySelectorAll(".comment-reply-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const rf = document.getElementById("reply-" + btn.dataset.id);
-          rf.classList.toggle("open");
+          const div = document.createElement("div");
+          div.className = "comment";
+          div.innerHTML = `
+            <div class="comment-avatar">${initials(c.name)}</div>
+            <div class="comment-body">
+              <div class="comment-bubble">
+                <div class="comment-header">
+                  <span class="comment-name">${c.name}</span>
+                  <span class="comment-date">${date}</span>
+                </div>
+                <div class="comment-text">${c.text}</div>
+                <button class="reply-toggle" data-toggle="${docSnap.id}">↩ Reply</button>
+              </div>
+              <div class="reply-form" id="reply-${docSnap.id}">
+                <input class="form-input" id="rn-${docSnap.id}" placeholder="Your name" />
+                <input class="form-input" id="re-${docSnap.id}" type="email" placeholder="Your email (not published)" />
+                <textarea class="form-textarea" id="rt-${docSnap.id}" placeholder="Write your reply…"></textarea>
+                <button class="btn-primary" data-reply-to="${docSnap.id}">Post Reply →</button>
+              </div>
+              ${repliesHtml ? `<div class="replies">${repliesHtml}</div>` : ""}
+            </div>`;
+          list.appendChild(div);
         });
-      });
 
-      // Reply submissions
-      document.querySelectorAll("[data-reply-to]").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const cid = btn.dataset.replyTo;
-          const name = document.getElementById("rn-" + cid).value.trim();
-          const text = document.getElementById("rt-" + cid).value.trim();
-          if (!name || !text) return;
-          btn.disabled = true;
-          const cRef = doc(db, "posts", postId, "comments", cid);
-          const cSnap = await getDoc(cRef);
-          const existing = cSnap.data().replies || [];
-          await updateDoc(cRef, { replies: [...existing, { name, text, createdAt: new Date() }] });
-          loadComments();
+        list.querySelectorAll("[data-toggle]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            document.getElementById("reply-" + btn.dataset.toggle).classList.toggle("open");
+          });
         });
-      });
 
-    } catch (err) {
-      console.error(err);
-      list.innerHTML = '<p class="no-comments">Could not load comments.</p>';
+        list.querySelectorAll("[data-reply-to]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const cid = btn.dataset.replyTo;
+            const name = document.getElementById("rn-" + cid).value.trim();
+            const text = document.getElementById("rt-" + cid).value.trim();
+            if (!name || !text) return;
+            btn.disabled = true;
+            btn.textContent = "Posting…";
+            const cRef = doc(db, "posts", postId, "comments", cid);
+            const cSnap = await getDoc(cRef);
+            const existing = cSnap.data().replies || [];
+            await updateDoc(cRef, { replies: [...existing, { name, text, createdAt: new Date() }] });
+            loadComments();
+          });
+        });
+      } catch (err) {
+        console.error(err);
+        list.innerHTML = '<div class="state-box"><p class="state-text">Could not load comments.</p></div>';
+      }
     }
-  }
 
-  document.getElementById("submit-comment").addEventListener("click", async () => {
-    const name = document.getElementById("c-name").value.trim();
-    const email = document.getElementById("c-email").value.trim();
-    const text = document.getElementById("c-text").value.trim();
-    const msg = document.getElementById("comment-msg");
-    const btn = document.getElementById("submit-comment");
-    if (!name || !email || !text) { msg.textContent = "Please fill in all fields."; msg.className = "form-message error"; return; }
-    btn.disabled = true;
-    btn.textContent = "Posting…";
-    try {
-      await addDoc(collection(db, "posts", postId, "comments"), { name, email, text, createdAt: serverTimestamp(), replies: [] });
-      await updateDoc(doc(db, "posts", postId), { commentCount: increment(1) });
-      document.getElementById("c-name").value = "";
-      document.getElementById("c-email").value = "";
-      document.getElementById("c-text").value = "";
-      msg.textContent = "Comment posted!";
-      msg.className = "form-message success";
-      loadComments();
-    } catch (err) {
-      msg.textContent = "Failed to post comment. Please try again.";
-      msg.className = "form-message error";
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Post Comment";
-    }
-  });
+    document.getElementById("submit-comment").addEventListener("click", async () => {
+      const name = document.getElementById("c-name").value.trim();
+      const email = document.getElementById("c-email").value.trim();
+      const text = document.getElementById("c-text").value.trim();
+      const msg = document.getElementById("comment-msg");
+      const btn = document.getElementById("submit-comment");
 
-  loadPost();
-</script>
+      if (!name || !email || !text) {
+        msg.textContent = "Please fill in all fields.";
+        msg.className = "form-message error";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Posting…";
+      try {
+        await addDoc(collection(db, "posts", postId, "comments"), { name, email, text, createdAt: serverTimestamp(), replies: [] });
+        await updateDoc(doc(db, "posts", postId), { commentCount: increment(1) });
+        document.getElementById("c-name").value = "";
+        document.getElementById("c-email").value = "";
+        document.getElementById("c-text").value = "";
+        msg.textContent = "✓ Comment posted. Thanks for joining the conversation!";
+        msg.className = "form-message success";
+        loadComments();
+      } catch (err) {
+        console.error(err);
+        msg.textContent = "Could not post your comment. Please try again.";
+        msg.className = "form-message error";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Post Comment →";
+      }
+    });
+
+    // ── Nav scroll shadow ──
+    const nav = document.getElementById("nav");
+    window.addEventListener("scroll", () => {
+      nav.classList.toggle("scrolled", window.scrollY > 20);
+    });
+
+    loadPost();
+  </script>
 </body>
 </html>
