@@ -326,7 +326,7 @@
     }
   </script>
 
-  <style>
+<style>
   /* ── DRAWER LAYOUT OVERRIDE ── */
   .nav-drawer {
     display: flex !important;
@@ -339,7 +339,6 @@
     flex-direction: column !important;
     align-items: stretch !important;
     width: 100% !important;
-    position: static !important;
   }
   .nav-drawer .drawer-links a {
     display: block !important;
@@ -350,17 +349,17 @@
     padding: 16px 0 !important;
     margin: 0 !important;
     box-sizing: border-box !important;
+    border-bottom: 1px solid var(--border) !important;
   }
-  .nav-drawer .drawer-cta {
-    display: block !important;
-    width: 100% !important;
-    position: static !important;
-    float: none !important;
-    order: 99 !important;
-    margin: 24px 0 0 0 !important;
-    padding: 15px 20px !important;
+  .nav-drawer .drawer-links a.drawer-cta {
+    background: var(--cobalt) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
     text-align: center !important;
-    box-sizing: border-box !important;
+    font-weight: 600 !important;
+    padding: 15px 20px !important;
+    margin-top: 24px !important;
   }
 </style>
 
