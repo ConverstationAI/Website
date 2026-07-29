@@ -264,11 +264,14 @@
     body.drawer-open { overflow: hidden; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
+    @media (max-width: 1080px) {
       nav .nav-links { display: none; }
       .nav-burger { display: flex; }
       .nav-logo-tag { display: none; }
+      .nav-logo { margin-right: auto; margin-left: 14px; }
+    }
 
+    @media (max-width: 900px) {
       .post-header { padding: calc(var(--nav-h) + 48px) 6% 40px; }
       .post-title { font-size: clamp(28px, 8vw, 40px); }
       .post-meta { gap: 12px; }
@@ -324,6 +327,10 @@
 
   <!-- NAV -->
   <nav id="nav">
+    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
     <a href="index.html" class="nav-logo">
       <span class="nav-logo-name">Converstation <span>AI</span></span>
       <span class="nav-logo-tag">Advancing Conversational Intelligence Through Simulation</span>
@@ -332,15 +339,10 @@
     <div class="nav-links" id="nav-links">
       <a href="index.html#products" class="nav-link">Products</a>
       <a href="index.html#audiences" class="nav-link">Who It's For</a>
-      <a href="index.html#technology" class="nav-link">Technology</a>
       <a href="index.html#about" class="nav-link">About</a>
       <a href="blog.html" class="nav-link current">Blog</a>
       <a href="index.html#contact" class="nav-cta">Get in Touch</a>
     </div>
-
-    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
   </nav>
 
   <div class="nav-scrim" id="nav-scrim"></div>
@@ -353,7 +355,6 @@
     <nav class="drawer-links">
       <a href="index.html#products">Products</a>
       <a href="index.html#audiences">Who It's For</a>
-      <a href="index.html#technology">Technology</a>
       <a href="index.html#about">About</a>
       <a href="blog.html" class="current">Blog</a>
     </nav>
@@ -412,7 +413,6 @@
         <div class="footer-links">
           <a href="index.html#products" class="footer-link">Products</a>
           <a href="index.html#audiences" class="footer-link">Who It's For</a>
-          <a href="index.html#technology" class="footer-link">Technology</a>
           <a href="index.html#about" class="footer-link">About</a>
           <a href="blog.html" class="footer-link">Blog</a>
           <a href="index.html#contact" class="footer-link">Contact</a>

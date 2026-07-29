@@ -49,11 +49,11 @@
     .nav-logo-name { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; }
     .nav-logo-name span { color: var(--cobalt); }
     .nav-logo-tag { font-size: 16px; font-weight: 500; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
-    .nav-links { display: flex; gap: 32px; align-items: center; }
-    .nav-link { font-size: 16px; font-weight: 500; color: var(--ink-light); text-decoration: none; transition: color 0.2s; font-family: inherit; }
+    .nav-links { display: flex; gap: 26px; align-items: center; flex-shrink: 0; }
+    .nav-link { font-size: 16px; font-weight: 500; color: var(--ink-light); text-decoration: none; transition: color 0.2s; font-family: inherit; white-space: nowrap; }
     .nav-link:hover { color: var(--cobalt); }
     .nav-link.current { color: var(--cobalt); font-weight: 600; }
-    .nav-cta { background: var(--cobalt); color: white; border: none; border-radius: 8px; padding: 9px 20px; font-size: 16px; font-weight: 600; font-family: inherit; transition: all 0.2s; text-decoration: none; }
+    .nav-cta { background: var(--cobalt); color: white; border: none; border-radius: 8px; padding: 9px 20px; font-size: 16px; font-weight: 600; font-family: inherit; transition: all 0.2s; text-decoration: none; white-space: nowrap; }
     .nav-cta:hover { background: var(--cobalt-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,82,204,0.25); }
 
     /* ── HERO ── */
@@ -226,11 +226,14 @@
     body.drawer-open { overflow: hidden; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
+   @media (max-width: 1080px) {
       nav .nav-links { display: none; }
       .nav-burger { display: flex; }
       .nav-logo-tag { display: none; }
+      .nav-logo { margin-right: auto; margin-left: 14px; }
+    }
 
+    @media (max-width: 900px) {
       .hero { padding: calc(var(--nav-h) + 56px) 6% 48px; }
       .hero-title { font-size: clamp(32px, 9vw, 48px); }
       .hero-mission { font-size: 17px; }
@@ -271,6 +274,10 @@
 
   <!-- NAV -->
   <nav id="nav">
+    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
     <a href="index.html" class="nav-logo">
       <span class="nav-logo-name">Converstation <span>AI</span></span>
       <span class="nav-logo-tag">Advancing Conversational Intelligence Through Simulation</span>
@@ -284,10 +291,6 @@
       <a href="blog.html" class="nav-link current">Blog</a>
       <a href="index.html#contact" class="nav-cta">Get in Touch</a>
     </div>
-
-    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
   </nav>
 
   <div class="nav-scrim" id="nav-scrim"></div>
