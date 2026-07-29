@@ -325,6 +325,45 @@
       );
     }
   </script>
+
+  <style>
+  /* ── DRAWER LAYOUT OVERRIDE ── */
+  .nav-drawer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    text-align: left !important;
+  }
+  .nav-drawer .drawer-links {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    position: static !important;
+  }
+  .nav-drawer .drawer-links a {
+    display: block !important;
+    width: 100% !important;
+    position: static !important;
+    float: none !important;
+    text-align: left !important;
+    padding: 16px 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .nav-drawer .drawer-cta {
+    display: block !important;
+    width: 100% !important;
+    position: static !important;
+    float: none !important;
+    order: 99 !important;
+    margin: 24px 0 0 0 !important;
+    padding: 15px 20px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+</style>
+
 </head>
 <body>
 

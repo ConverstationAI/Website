@@ -273,18 +273,21 @@
     }
     .drawer-close:hover { color: var(--ink); }
 
-    .drawer-links { display: flex; flex-direction: column; }
+    .drawer-links { display: flex; flex-direction: column; width: 100%; }
     .drawer-links a {
+      display: block; width: 100%;
       font-size: 17px; font-weight: 500; color: var(--ink);
-      text-decoration: none; padding: 16px 0;
+      text-decoration: none; padding: 16px 0; text-align: left;
       border-bottom: 1px solid var(--border); transition: color 0.2s;
     }
     .drawer-links a:hover, .drawer-links a.current { color: var(--cobalt); font-weight: 600; }
 
     .drawer-cta {
+      display: block; width: 100%;
       margin-top: 24px; background: var(--cobalt); color: white;
       border-radius: 8px; padding: 15px 20px; font-size: 17px; font-weight: 600;
       text-align: center; text-decoration: none; transition: background 0.2s;
+      box-sizing: border-box;
     }
     .drawer-cta:hover { background: var(--cobalt-dark); }
 
@@ -339,6 +342,83 @@
       .product-card:hover, .audience-card:hover { transform: none; box-shadow: none; }
     }
   </style>
+
+  <style>
+  /* ── DRAWER LAYOUT OVERRIDE ── */
+  .nav-drawer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    text-align: left !important;
+  }
+  .nav-drawer .drawer-links {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    position: static !important;
+  }
+  .nav-drawer .drawer-links a {
+    display: block !important;
+    width: 100% !important;
+    position: static !important;
+    float: none !important;
+    text-align: left !important;
+    padding: 16px 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .nav-drawer .drawer-cta {
+    display: block !important;
+    width: 100% !important;
+    position: static !important;
+    float: none !important;
+    order: 99 !important;
+    margin: 24px 0 0 0 !important;
+    padding: 15px 20px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+</style>
+
+<style>
+  /* ── DRAWER LAYOUT OVERRIDE ── */
+  .nav-drawer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    text-align: left !important;
+  }
+  .nav-drawer .drawer-links {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    position: static !important;
+  }
+  .nav-drawer .drawer-links a {
+    display: block !important;
+    width: 100% !important;
+    position: static !important;
+    float: none !important;
+    text-align: left !important;
+    padding: 16px 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .nav-drawer .drawer-cta {
+    display: block !important;
+    width: 100% !important;
+    position: static !important;
+    float: none !important;
+    order: 99 !important;
+    margin: 24px 0 0 0 !important;
+    padding: 15px 20px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+</style>
+
 </head>
 <body>
 
