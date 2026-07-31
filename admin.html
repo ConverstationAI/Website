@@ -235,6 +235,7 @@
           </div>
           <div class="upload-progress" id="cover-progress"><div class="upload-progress-bar" id="cover-progress-bar"></div></div>
           <div class="media-preview" id="cover-preview"></div>
+          <button class="btn-danger" id="cover-remove" style="display:none;margin-top:10px;padding:8px 16px">Remove cover media</button>
           <input type="hidden" id="cover-url" />
           <input type="hidden" id="cover-type" />
         </div>
@@ -255,12 +256,16 @@
             <input type="file" id="inline-file" accept="image/*,video/*,audio/*" style="display:none" />
           </div>
           <div class="upload-progress" id="inline-progress"><div class="upload-progress-bar" id="inline-progress-bar"></div></div>
+          <div class="media-preview" id="inline-preview"></div>
           <div id="inline-url-box" style="display:none;margin-top:14px">
             <label class="form-label">Caption (optional — appears under the media)</label>
             <input class="form-control" id="inline-caption" placeholder="Figure 1. Simulation pipeline overview" />
             <label class="form-label" style="margin-top:12px">Snippet</label>
             <textarea class="form-control" id="inline-snippet" readonly rows="3" style="font-family:monospace;font-size:13px" onclick="this.select()"></textarea>
-            <button class="btn-primary" id="insert-snippet" style="margin-top:10px">Insert into post ↓</button>
+            <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+              <button class="btn-primary" id="insert-snippet">Insert into post ↓</button>
+              <button class="btn-danger" id="inline-remove" style="padding:8px 16px">Remove</button>
+            </div>
             <input type="hidden" id="inline-url-result" />
             <input type="hidden" id="inline-media-type" />
           </div>
@@ -397,7 +402,12 @@
     document.getElementById("post-body").value = p.content || "";
     document.getElementById("cover-url").value = p.coverImage || p.coverVideo || p.coverAudio || "";
     document.getElementById("cover-type").value = p.coverImage ? "image" : p.coverVideo ? "video" : p.coverAudio ? "audio" : "";
-    if (p.coverImage) document.getElementById("cover-preview").innerHTML = `<img src="${p.coverImage}" style="max-height:160px;border-radius:8px" />`;
+    const ct = document.getElementById("cover-type").value;
+    const cu = document.getElementById("cover-url").value;
+    if (cu) {
+      document.getElementById("cover-preview").innerHTML = previewHtml(cu, ct, 180);
+      document.getElementById("cover-remove").style.display = "inline-block";
+    }
     showPage("new-post");
   }
 
@@ -410,6 +420,10 @@
     document.getElementById("cover-url").value = "";
     document.getElementById("cover-type").value = "";
     document.getElementById("cover-preview").innerHTML = "";
+    document.getElementById("cover-remove").style.display = "none";
+    document.getElementById("inline-url-box").style.display = "none";
+    document.getElementById("inline-preview").innerHTML = "";
+    document.getElementById("inline-caption").value = "";
     document.getElementById("save-status").textContent = "";
   }
 
@@ -434,18 +448,32 @@
   coverZone.addEventListener("drop", e => { e.preventDefault(); coverZone.classList.remove("drag-over"); handleCoverFile(e.dataTransfer.files[0]); });
   document.getElementById("cover-file").addEventListener("change", e => handleCoverFile(e.target.files[0]));
 
+  function previewHtml(url, t, maxH) {
+    if (t === "image") return `<img src="${url}" style="max-height:${maxH}px;border-radius:8px;margin-top:10px" />`;
+    if (t === "video") return `<video controls src="${url}" style="max-width:100%;max-height:${maxH}px;border-radius:8px;margin-top:10px"></video>`;
+    return `<audio controls src="${url}" style="width:100%;margin-top:10px"></audio>`;
+  }
+
   function handleCoverFile(file) {
     if (!file) return;
     uploadFile(file, "cover-progress", "cover-progress-bar", (url, type) => {
-      document.getElementById("cover-url").value = url;
       const t = type.startsWith("image") ? "image" : type.startsWith("video") ? "video" : "audio";
+      document.getElementById("cover-url").value = url;
       document.getElementById("cover-type").value = t;
-      const preview = document.getElementById("cover-preview");
-      if (t === "image") preview.innerHTML = `<img src="${url}" style="max-height:180px;border-radius:8px;margin-top:10px" />`;
-      else if (t === "video") preview.innerHTML = `<video controls src="${url}" style="max-width:100%;border-radius:8px;margin-top:10px"></video>`;
-      else preview.innerHTML = `<audio controls src="${url}" style="width:100%;margin-top:10px"></audio>`;
+      document.getElementById("cover-preview").innerHTML = previewHtml(url, t, 180);
+      document.getElementById("cover-remove").style.display = "inline-block";
     });
   }
+
+  document.getElementById("cover-remove").addEventListener("click", () => {
+    document.getElementById("cover-url").value = "";
+    document.getElementById("cover-type").value = "";
+    document.getElementById("cover-preview").innerHTML = "";
+    document.getElementById("cover-file").value = "";
+    document.getElementById("cover-progress").style.display = "none";
+    document.getElementById("cover-progress-bar").style.width = "0%";
+    document.getElementById("cover-remove").style.display = "none";
+  });
 
   // Inline media
   const inlineZone = document.getElementById("inline-drop-zone");
@@ -479,10 +507,23 @@
       const t = type.startsWith("image") ? "image" : type.startsWith("video") ? "video" : "audio";
       document.getElementById("inline-url-result").value = url;
       document.getElementById("inline-media-type").value = t;
+      document.getElementById("inline-preview").innerHTML = previewHtml(url, t, 220);
       document.getElementById("inline-url-box").style.display = "block";
       refreshSnippet();
     });
   }
+
+  document.getElementById("inline-remove").addEventListener("click", () => {
+    document.getElementById("inline-url-result").value = "";
+    document.getElementById("inline-media-type").value = "";
+    document.getElementById("inline-caption").value = "";
+    document.getElementById("inline-snippet").value = "";
+    document.getElementById("inline-preview").innerHTML = "";
+    document.getElementById("inline-file").value = "";
+    document.getElementById("inline-url-box").style.display = "none";
+    document.getElementById("inline-progress").style.display = "none";
+    document.getElementById("inline-progress-bar").style.width = "0%";
+  });
 
   document.getElementById("inline-caption").addEventListener("input", refreshSnippet);
 
