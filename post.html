@@ -399,6 +399,16 @@
   footer { padding: 26px 5% !important; }
   footer .footer-inner { max-width: none !important; margin: 0 !important; }
   footer .footer-bottom { justify-content: flex-start !important; margin: 0 !important; }
+  .post-content figure { margin: 32px 0; }
+  .post-content figure img,
+  .post-content figure video { margin: 0 0 10px 0; width: 100%; }
+  .post-content figure audio { margin: 0 0 10px 0; width: 100%; }
+  .post-content figcaption {
+    font-size: 16px; color: #718096; line-height: 1.6;
+    padding-left: 2px; border-left: 3px solid #E2E8F0;
+    padding-left: 12px;
+  }
+  .post-content figcaption strong { color: #1A202C; font-weight: 600; }
 </style>
 </head>
 
@@ -515,6 +525,20 @@
     function initials(name) {
       return (name || "CA").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
     }
+    function fmtContent(raw) {
+      if (!raw) return "";
+      const blockStart = /^\s*<(p|h[1-6]|ul|ol|li|blockquote|figure|div|table|pre|img|video|audio|iframe|hr)\b/i;
+      return raw
+        .split(/\n\s*\n/)
+        .map(block => {
+          const b = block.trim();
+          if (!b) return "";
+          if (blockStart.test(b)) return b;
+          return "<p>" + b.replace(/\n/g, "<br>") + "</p>";
+        })
+        .join("\n");
+    }
+
     function fmt(ts) {
       if (!ts) return "";
       const d = ts.toDate ? ts.toDate() : (ts.seconds ? new Date(ts.seconds * 1000) : new Date(ts));
@@ -550,7 +574,7 @@
 
         article.innerHTML = `
           ${cover}
-          <div class="post-content">${p.content || ""}</div>
+          <div class="post-content">${fmtContent(p.content || "")}</div>
           <div class="share-bar">
             <span class="share-label">Share this post:</span>
             <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(p.title)}" target="_blank">X / Twitter</a>

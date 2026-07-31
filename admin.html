@@ -255,9 +255,14 @@
             <input type="file" id="inline-file" accept="image/*,video/*,audio/*" style="display:none" />
           </div>
           <div class="upload-progress" id="inline-progress"><div class="upload-progress-bar" id="inline-progress-bar"></div></div>
-          <div id="inline-url-box" style="display:none;margin-top:10px">
-            <label class="form-label">Uploaded URL — copy into post content:</label>
-            <input class="form-control" id="inline-url-result" readonly onclick="this.select()" />
+          <div id="inline-url-box" style="display:none;margin-top:14px">
+            <label class="form-label">Caption (optional — appears under the media)</label>
+            <input class="form-control" id="inline-caption" placeholder="Figure 1. Simulation pipeline overview" />
+            <label class="form-label" style="margin-top:12px">Snippet</label>
+            <textarea class="form-control" id="inline-snippet" readonly rows="3" style="font-family:monospace;font-size:13px" onclick="this.select()"></textarea>
+            <button class="btn-primary" id="insert-snippet" style="margin-top:10px">Insert into post ↓</button>
+            <input type="hidden" id="inline-url-result" />
+            <input type="hidden" id="inline-media-type" />
           </div>
         </div>
 
@@ -450,13 +455,48 @@
   inlineZone.addEventListener("drop", e => { e.preventDefault(); inlineZone.classList.remove("drag-over"); handleInlineFile(e.dataTransfer.files[0]); });
   document.getElementById("inline-file").addEventListener("change", e => handleInlineFile(e.target.files[0]));
 
+  function buildSnippet() {
+    const url = document.getElementById("inline-url-result").value;
+    const type = document.getElementById("inline-media-type").value;
+    const cap = document.getElementById("inline-caption").value.trim();
+    if (!url) return "";
+    let media;
+    if (type === "video") media = `<video controls src="${url}"></video>`;
+    else if (type === "audio") media = `<audio controls src="${url}"></audio>`;
+    else media = `<img src="${url}" alt="${cap.replace(/"/g, "&quot;")}" />`;
+    return cap
+      ? `<figure>\n  ${media}\n  <figcaption>${cap}</figcaption>\n</figure>`
+      : `<figure>\n  ${media}\n</figure>`;
+  }
+
+  function refreshSnippet() {
+    document.getElementById("inline-snippet").value = buildSnippet();
+  }
+
   function handleInlineFile(file) {
     if (!file) return;
-    uploadFile(file, "inline-progress", "inline-progress-bar", (url) => {
-      document.getElementById("inline-url-box").style.display = "block";
+    uploadFile(file, "inline-progress", "inline-progress-bar", (url, type) => {
+      const t = type.startsWith("image") ? "image" : type.startsWith("video") ? "video" : "audio";
       document.getElementById("inline-url-result").value = url;
+      document.getElementById("inline-media-type").value = t;
+      document.getElementById("inline-url-box").style.display = "block";
+      refreshSnippet();
     });
   }
+
+  document.getElementById("inline-caption").addEventListener("input", refreshSnippet);
+
+  document.getElementById("insert-snippet").addEventListener("click", () => {
+    const body = document.getElementById("post-body");
+    const snip = buildSnippet();
+    if (!snip) return;
+    const pos = body.selectionStart || body.value.length;
+    body.value = body.value.slice(0, pos) + "\n\n" + snip + "\n\n" + body.value.slice(pos);
+    body.focus();
+    const btn = document.getElementById("insert-snippet");
+    btn.textContent = "Inserted ✓";
+    setTimeout(() => { btn.textContent = "Insert into post ↓"; }, 1500);
+  });
 
   // ── SAVE POST ──
   async function savePost(published) {
