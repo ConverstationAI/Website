@@ -320,7 +320,10 @@
 </style>
 
 <style>
-  .logo-svg { height: 34px; width: auto; display: block; }
+  .logo-svg { height: 56px; width: auto; display: block; }
+  nav .nav-burger { order: 1; }
+  nav .nav-logo   { order: 2; margin-right: auto; margin-left: 0 !important; }
+  nav .nav-links  { order: 3; }
   .logo-svg .mark-dark-fill    { fill: #1A202C; }
   .logo-svg .mark-dark-stroke  { stroke: #1A202C; }
   .logo-svg .mark-accent-fill  { fill: #0052CC; }
@@ -342,28 +345,9 @@
   .footer-logo-wrap { display: flex; flex-direction: column; gap: 6px; }
   .footer-logo-wrap .logo-svg { height: 30px; }
 </style>
+
 <style>
-  .logo-svg { height: 34px; width: auto; display: block; }
-  .logo-svg .mark-dark-fill    { fill: #1A202C; }
-  .logo-svg .mark-dark-stroke  { stroke: #1A202C; }
-  .logo-svg .mark-accent-fill  { fill: #0052CC; }
-  .logo-svg .mark-accent-stroke{ stroke: #0052CC; }
-  .logo-svg .logo-text {
-    fill: #1A202C;
-    font-family: 'Montserrat', 'DM Sans', system-ui, sans-serif;
-    font-size: 80px; font-weight: 700; letter-spacing: -1px;
-  }
-  .logo-svg .logo-accent { fill: #0052CC; }
-
-  .logo-svg.on-dark .mark-dark-fill,
-  .logo-svg.on-dark .logo-text          { fill: #FFFFFF; }
-  .logo-svg.on-dark .mark-dark-stroke   { stroke: #FFFFFF; }
-  .logo-svg.on-dark .mark-accent-fill,
-  .logo-svg.on-dark .logo-accent        { fill: #60A5FA; }
-  .logo-svg.on-dark .mark-accent-stroke { stroke: #60A5FA; }
-
-  .footer-logo-wrap { display: flex; flex-direction: column; gap: 6px; }
-  .footer-logo-wrap .logo-svg { height: 30px; }
+  nav .logo-svg { height: 56px !important; width: auto !important; }
 </style>
 </head>
 <body>
@@ -383,7 +367,6 @@
         <path class="mark-dark-stroke" d="M 129.5 115.6 A 36 36 0 0 1 107.5 130.2" fill="none" stroke-width="16"/>
         <text x="215" y="124" class="logo-text">Converstation<tspan class="logo-accent">AI</tspan></text>
       </svg>
-      <span class="nav-logo-tag">Advancing Conversational Intelligence Through Simulation</span>
     </a>
 
     <div class="nav-links" id="nav-links">
