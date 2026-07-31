@@ -410,7 +410,8 @@
 
   // ── FILE UPLOAD ──
   function uploadFile(file, progressId, barId, onDone) {
-    const storageRef = ref(storage, `blog/${Date.now()}_${file.name}`);
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+    const storageRef = ref(storage, `blog/${Date.now()}_${safeName}`);
     const task = uploadBytesResumable(storageRef, file);
     document.getElementById(progressId).style.display = "block";
     task.on("state_changed",
