@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Post | Converstation AI</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'> </text></svg>">
-
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='48 43 144 104'><polygon points='61.9,112.8 57.6,137.4 82.2,133.1' fill='%231A202C'/><circle cx='100' cy='95' r='36' fill='none' stroke='%231A202C' stroke-width='16'/><polygon points='178.1,112.8 182.4,137.4 157.8,133.1' fill='%230052CC'/><circle cx='140' cy='95' r='36' fill='none' stroke='%230052CC' stroke-width='16'/><path d='M 129.5 115.6 A 36 36 0 0 1 107.5 130.2' fill='none' stroke='%231A202C' stroke-width='16'/></svg>">
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -14,7 +13,7 @@
   <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js" />
   <link rel="modulepreload" href="./firebase-init.js" />
 
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&family=Montserrat:wght@700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -372,6 +371,29 @@
   }
 </style>
 
+<style>
+  .logo-svg { height: 34px; width: auto; display: block; }
+  .logo-svg .mark-dark-fill    { fill: #1A202C; }
+  .logo-svg .mark-dark-stroke  { stroke: #1A202C; }
+  .logo-svg .mark-accent-fill  { fill: #0052CC; }
+  .logo-svg .mark-accent-stroke{ stroke: #0052CC; }
+  .logo-svg .logo-text {
+    fill: #1A202C;
+    font-family: 'Montserrat', 'DM Sans', system-ui, sans-serif;
+    font-size: 80px; font-weight: 700; letter-spacing: -1px;
+  }
+  .logo-svg .logo-accent { fill: #0052CC; }
+
+  .logo-svg.on-dark .mark-dark-fill,
+  .logo-svg.on-dark .logo-text          { fill: #FFFFFF; }
+  .logo-svg.on-dark .mark-dark-stroke   { stroke: #FFFFFF; }
+  .logo-svg.on-dark .mark-accent-fill,
+  .logo-svg.on-dark .logo-accent        { fill: #60A5FA; }
+  .logo-svg.on-dark .mark-accent-stroke { stroke: #60A5FA; }
+
+  .footer-logo-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .footer-logo-wrap .logo-svg { height: 30px; }
+</style>
 </head>
 <body>
 
@@ -381,8 +403,15 @@
       <span></span><span></span><span></span>
     </button>
 
-    <a href="index.html" class="nav-logo">
-      <span class="nav-logo-name">Converstation <span>AI</span></span>
+    <a href="#" class="nav-logo" aria-label="Converstation AI">
+      <svg class="logo-svg" viewBox="0 0 920 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Converstation AI">
+        <polygon class="mark-dark-fill" points="61.9,112.8 57.6,137.4 82.2,133.1"/>
+        <circle class="mark-dark-stroke" cx="100" cy="95" r="36" fill="none" stroke-width="16"/>
+        <polygon class="mark-accent-fill" points="178.1,112.8 182.4,137.4 157.8,133.1"/>
+        <circle class="mark-accent-stroke" cx="140" cy="95" r="36" fill="none" stroke-width="16"/>
+        <path class="mark-dark-stroke" d="M 129.5 115.6 A 36 36 0 0 1 107.5 130.2" fill="none" stroke-width="16"/>
+        <text x="215" y="124" class="logo-text">Converstation<tspan class="logo-accent">AI</tspan></text>
+      </svg>
       <span class="nav-logo-tag">Advancing Conversational Intelligence Through Simulation</span>
     </a>
 
