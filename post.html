@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js" />
   <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js" />
-  <link rel="modulepreload" href="./firebase-init.js" />
+  <link rel="modulepreload" href="/firebase-init.js" />
 
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&family=Montserrat:wght@700&display=swap" rel="stylesheet" />
   <style>
@@ -309,7 +309,7 @@
   </style>
 
   <script type="module">
-    import { db } from "./firebase-init.js";
+    import { db } from "/firebase-init.js";
     import { doc, getDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const legacyId = new URLSearchParams(window.location.search).get("id");
@@ -455,11 +455,10 @@
   }
   .post-content figcaption strong { color: #1A202C; font-weight: 600; }
 </style>
-</head>
-
 <style>
   nav .logo-svg { height: 56px !important; width: auto !important; }
 </style>
+</head>
 <body>
 
   <!-- NAV -->
@@ -468,7 +467,7 @@
       <span></span><span></span><span></span>
     </button>
 
-    <a href="#" class="nav-logo" aria-label="Converstation AI">
+    <a href="index.html" class="nav-logo" aria-label="Converstation AI">
       <svg class="logo-svg" viewBox="0 0 920 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Converstation AI">
         <polygon class="mark-dark-fill" points="61.9,112.8 57.6,137.4 82.2,133.1"/>
         <circle class="mark-dark-stroke" cx="100" cy="95" r="36" fill="none" stroke-width="16"/>

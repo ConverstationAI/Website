@@ -72,13 +72,13 @@ exports.postpreview = onRequest({ region: "us-central1" }, async (req, res) => {
 <meta name="twitter:title" content="${esc(title)}" />
 <meta name="twitter:description" content="${esc(desc)}" />
 <meta name="twitter:image" content="${esc(image)}" />
-<script>window.__POST_ID = ${JSON.stringify(id)};</script>
 `;
 
   html = html
     .replace(/<title>[\s\S]*?<\/title>/i, "")
+    .replace(/<head([^>]*)>/i, `<head$1><script>window.__POST_ID = ${JSON.stringify(id)};</script>`)
     .replace("</head>", tags + "</head>");
 
   res.set("Cache-Control", "public, max-age=300, s-maxage=600");
   res.status(200).send(html);
-});
+});// rebuild 1785880030
