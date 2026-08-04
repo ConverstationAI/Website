@@ -599,6 +599,7 @@
         const p = snap.data();
         document.title = p.title + " | Converstation AI";
         const shareUrl = location.href.split("?")[0];
+        
         header.innerHTML = `
           <a href="blog.html" class="back-link">← Back to Blog</a>
           <div><span class="post-tag">${p.tag || "Update"}</span></div>
