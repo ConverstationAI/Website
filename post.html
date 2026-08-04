@@ -596,6 +596,7 @@
         }
         const p = snap.data();
         document.title = p.title + " | Converstation AI";
+        const shareUrl = `${location.origin}/p/${postId}`;
 
         header.innerHTML = `
           <a href="blog.html" class="back-link">← Back to Blog</a>
@@ -616,13 +617,13 @@
           <div class="post-content">${fmtContent(p.content || "")}</div>
           <div class="share-bar">
             <span class="share-label">Share this post:</span>
-            <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(p.title)}" target="_blank">X / Twitter</a>
-            <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(location.href)}" target="_blank">LinkedIn</a>
+            <a class="share-btn" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(p.title)}" target="_blank">X / Twitter</a>
+            <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}" target="_blank">LinkedIn</a>
             <button class="share-btn" id="copy-link">Copy Link</button>
           </div>`;
 
         document.getElementById("copy-link").addEventListener("click", function () {
-          navigator.clipboard.writeText(location.href);
+          navigator.clipboard.writeText(shareUrl);
           this.textContent = "Copied ✓";
           setTimeout(() => { this.textContent = "Copy Link"; }, 2000);
         });
