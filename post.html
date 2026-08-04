@@ -312,8 +312,13 @@
     import { db } from "./firebase-init.js";
     import { doc, getDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+    const legacyId = new URLSearchParams(window.location.search).get("id");
+    if (legacyId && !window.__POST_ID) {
+      location.replace("/p/" + encodeURIComponent(legacyId));
+    }
+
     const postId = window.__POST_ID
-      || new URLSearchParams(window.location.search).get("id")
+      || legacyId
       || location.pathname.split("/").filter(Boolean).pop();
 
     window.__db = db;
