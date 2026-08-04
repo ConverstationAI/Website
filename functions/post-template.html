@@ -312,9 +312,10 @@
     import { db } from "/firebase-init.js";
     import { doc, getDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    const postId = window.__POST_ID
+    const m = location.pathname.match(/^\/p\/([^\/?#]+)/);
+    const postId = (m && decodeURIComponent(m[1]))
       || new URLSearchParams(window.location.search).get("id")
-      || location.pathname.split("/").filter(Boolean).pop();
+      || window.__POST_ID;
 
     window.__db = db;
     window.__postId = postId;
